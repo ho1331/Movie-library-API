@@ -11,5 +11,7 @@ class Config:
     DB_PASSWORD = getenv("DB_PASSWORD")
     DB_DB = getenv("POSTGRES_DB")
     SQLALCHEMY_DATABASE_URI = (
-        f"postgresql+psycopg2://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:5432"
+        f"postgresql+psycopg2://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:5432/{DB_DB}"
     )
+
+
