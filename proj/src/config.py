@@ -2,6 +2,7 @@ from os import getenv
 
 
 class Config:
+    # WEB
     DEBUG = True
     TESTING = True
 
