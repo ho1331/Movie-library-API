@@ -8,6 +8,10 @@ from src.models.base import BaseModel
 
 
 class User(db.Model, BaseModel):
+    """
+    class USER
+    """
+
     __tablename__ = "users"
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     name = db.Column(db.String(30), unique=False, nullable=False)
