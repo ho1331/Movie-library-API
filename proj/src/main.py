@@ -5,7 +5,7 @@ from src.views.users_views import Users, UsersList
 
 app = create_app()
 
-# API
+# API route
 api = Api(app)
 api.add_resource(UsersList, "/api/users/")
 api.add_resource(Users, "/api/users/<int:id>/")
