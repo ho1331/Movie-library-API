@@ -13,6 +13,7 @@ class Users(Resource):
 class UsersList(Resource):
     def post(self):
         request_json = request.get_json(cache=True)
+        # client add new user
         try:
             user = User.create(
                 request_json.get("username"),
@@ -27,6 +28,9 @@ class UsersList(Resource):
         return user, 200
 
     def get(self):
+        """
+        takes all users
+        """
         users = User.query.all()
         serialized_data = [
             {
