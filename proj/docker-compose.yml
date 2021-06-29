@@ -18,3 +18,5 @@ services:
       DB_HOST: db
     volumes:
       - ./src:/app/src
+
+      
