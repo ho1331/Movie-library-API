@@ -19,6 +19,7 @@ class User(db.Model, BaseModel):
     email = db.Column(db.String(150), unique=True, nullable=False)
     pswhash = db.Column(db.String(60), unique=True, nullable=False)
     created = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+    films = db.relationship("Film", backref="users", lazy=True)
 
     def __init__(self, name: str, nick_name: str, email: str, pswhash: str) -> None:
         self.name = name
