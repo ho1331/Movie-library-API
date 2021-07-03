@@ -24,3 +24,5 @@ class GenresList(Resource):
         genres = Genre.query.all()
         serialized_data = [{"id": genre.id, "genre": genre.genre} for genre in genres]
         return serialized_data, 200
+
+    

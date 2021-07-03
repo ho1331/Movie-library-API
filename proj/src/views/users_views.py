@@ -12,7 +12,7 @@ class Users(Resource):
 
 class UsersList(Resource):
     def post(self):
-        request_json = request.get_json(cache=True)
+        request_json = request.get_json(silent=True)
         # client add new user
         try:
             user = User.create(
