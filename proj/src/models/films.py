@@ -51,31 +51,14 @@ class Film(db.Model, BaseModel):
         self.user_id = user_id
 
     @staticmethod
-    def create(
-        ftitle: str,
-        fgenre_id: int,
-        frelease: datetime,
-        fdirector_id: str,
-        fdescription: str,
-        freting: str,
-        fposter: str,
-        fuser_id: int,
-    ) -> dict:
+    def create(data: dict) -> dict:
         """
         create user
         """
         result: dict = {}
         try:
-            film = Film(
-                title=ftitle,
-                genre_id=fgenre_id,
-                release=frelease,
-                director_id=fdirector_id,
-                description=fdescription,
-                reting=freting,
-                poster=fposter,
-                user_id=fuser_id,
-            )
+            film = Film(**data)
+            film.save()
             result = {
                 "title": film.title,
                 "genre_id": film.genre_id,
@@ -86,7 +69,7 @@ class Film(db.Model, BaseModel):
                 "poster": film.poster,
                 "user_id": film.user_id,
             }
-            film.save()
+
         except IntegrityError as exc:
             Film.rollback()
             result = {"Some errors": str(exc)}

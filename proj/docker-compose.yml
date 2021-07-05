@@ -11,7 +11,6 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
   api:
     build: .
-    # command: gunicorn --bind 0.0.0.0:5000 src.main:api
     ports:
       - "5000:5000"
     restart: on-failure
@@ -19,6 +18,8 @@ services:
       - db
     environment:
       DB_HOST: db
+    env_file: 
+      - ./.env
     volumes:
       - ./src:/app/src
 
@@ -27,6 +28,6 @@ services:
     ports:
       - "80:80"
     volumes:
-      - .nginx/conf.d:/etc/nginx/conf.d
+      - ./nginx/conf.d:/etc/nginx/conf.d
     depends_on: 
       - api

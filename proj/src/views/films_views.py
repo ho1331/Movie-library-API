@@ -1,23 +1,16 @@
 from flask import request
+from flask_login import login_required  # decorator для ограничения доступа к методу
 from flask_restful import Resource
 from sqlalchemy.exc import IntegrityError
 from src.models.films import Film
 
 
 class FilmsList(Resource):
+    @login_required
     def post(self):
         request_json = request.get_json(cache=True)
         try:
-            film = Film.create(
-                request_json.get("ftitle"),
-                request_json.get("fgenre_id"),
-                request_json.get("frelease"),
-                request_json.get("fdirector_id"),
-                request_json.get("fdescription"),
-                request_json.get("freting"),
-                request_json.get("fposter"),
-                request_json.get("fuser_id"),
-            )
+            film = Film.create(request_json)
         except IntegrityError as exc:
             Film.rollback()
             film = {"Some errors": str(exc)}
