@@ -1,16 +1,15 @@
 """empty message
 
-Revision ID: e7088cd29bec
+Revision ID: 22b5fa3d4261
 Revises: 
-Create Date: 2021-07-05 19:02:23.192496
+Create Date: 2021-07-06 19:13:09.730363
 
 """
-from alembic import op
 import sqlalchemy as sa
-
+from alembic import op
 
 # revision identifiers, used by Alembic.
-revision = 'e7088cd29bec'
+revision = '22b5fa3d4261'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -58,6 +57,8 @@ def upgrade():
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('poster')
     )
+    op.create_check_constraint("rating_check", "films", "reting >= 1 and reting  <= 10")
+
     # ### end Alembic commands ###
 
 

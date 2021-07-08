@@ -14,41 +14,19 @@ class Film(db.Model, BaseModel):
     __tablename__ = "films"
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     title = db.Column(db.String(100), unique=False, nullable=False)
-    genre_id = db.Column(
-        db.Integer, db.ForeignKey("genres.id", ondelete="CASCADE"), nullable=False
-    )
     release = db.Column(db.Date, unique=False, nullable=False)
     director_id = db.Column(db.Integer, db.ForeignKey("directors.id"), nullable=False)
     description = db.Column(db.String, default="description", nullable=False)
     reting = db.Column(
         db.Float,
-        db.CheckConstraint("1 <= reting <= 10"),
+        db.CheckConstraint("1 <= reting AND reting<= 10"),
         nullable=False,
     )
     poster = db.Column(db.String(255), unique=True, nullable=False)
     user_id = db.Column(
         db.Integer, db.ForeignKey("users.id", ondelete="CASCADE"), nullable=False
     )
-
-    def __init__(
-        self,
-        title: str,
-        genre_id: int,
-        release: datetime,
-        director_id: int,
-        description: str,
-        reting: float,
-        poster: str,
-        user_id: int,
-    ) -> None:
-        self.title = title
-        self.genre_id = genre_id
-        self.release = release
-        self.director_id = director_id
-        self.description = description
-        self.reting = reting
-        self.poster = poster
-        self.user_id = user_id
+    genres = db.relationship("Genre", secondary="ref", lazy=True)
 
     @staticmethod
     def create(data: dict) -> dict:
@@ -56,22 +34,46 @@ class Film(db.Model, BaseModel):
         create user
         """
         result: dict = {}
-        try:
-            film = Film(**data)
-            film.save()
-            result = {
-                "title": film.title,
-                "genre_id": film.genre_id,
-                "release": film.release,
-                "director_id": film.director_id,
-                "description": film.description,
-                "reting": film.reting,
-                "poster": film.poster,
-                "user_id": film.user_id,
-            }
+        film = Film(**data)
+        film.save()
+        result = {
+            "title": film.title,
+            "release": film.release,
+            "director_id": film.director_id,
+            "description": film.description,
+            "reting": film.reting,
+            "poster": film.poster,
+            "user_id": film.user_id,
+        }
 
-        except IntegrityError as exc:
-            Film.rollback()
-            result = {"Some errors": str(exc)}
+        return result
+
+
+class Ref(db.Model, BaseModel):
+    """
+    class condition Film and Genre
+    """
+
+    __tablename__ = "ref"
+    __table_args__ = (db.PrimaryKeyConstraint("films_id", "genres_id"),)
+    films_id = db.Column(
+        db.Integer, db.ForeignKey("films.id", ondelete="CASCADE"), nullable=False
+    )
+    genres_id = db.Column(
+        db.Integer, db.ForeignKey("genres.id", ondelete="CASCADE"), nullable=False
+    )
+
+    @staticmethod
+    def create(data: dict) -> dict:
+        """
+        create user
+        """
+        result: dict = {}
+        ref = Ref(**data)
+        ref.save()
+        result = {
+            "films_id": ref.films_id,
+            "genres_id": ref.genres_id,
+        }
 
         return result

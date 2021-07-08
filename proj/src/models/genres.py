@@ -11,7 +11,7 @@ class Genre(db.Model, BaseModel):
     __tablename__ = "genres"
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     genre = db.Column(db.String(30), unique=True, nullable=False)
-    films = db.relationship("Film", backref="genres", lazy=True)
+    # filmses = db.relationship("Film", secondary="ref", backref="genres", lazy=True)
 
     def __init__(self, genre: str) -> None:
         self.genre = genre
