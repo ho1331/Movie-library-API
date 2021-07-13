@@ -1,9 +1,10 @@
 from random import randint, uniform
 
 from faker import Factory
-from src.app import app
+from sqlalchemy.exc import IntegrityError
+from src.app import app, db
 from src.models.directors import Director
-from src.models.films import Film
+from src.models.films import Film, Ref
 from src.models.genres import Genre
 from src.models.users import User
 
@@ -48,9 +49,31 @@ def after_create():
                 "description": faker.paragraph(
                     nb_sentences=5, variable_nb_sentences=False
                 ),
-                "reting": round(uniform(1, 10), 2),
+                "rating": round(uniform(1, 10), 2),
                 "poster": faker.image_url(),
                 "user_id": randint(1, int(count_users.id)),
             }
         )
         count += 1
+
+    count_films = Film.query.order_by(Film.id.desc()).first()
+    count_genres = Genre.query.order_by(Genre.id.desc()).first()
+    count = 0
+    while count <= 150:
+        try:
+            Ref.create(
+                {
+                    "films_id": randint(1, int(count_films.id)),
+                    "genres_id": randint(1, int(count_genres.id)),
+                }
+            )
+        except IntegrityError:
+            Ref.rollback()
+            count -= 1
+        count += 1
+    films = set(db.session.query(Film.id).all())
+    genres = set(db.session.query(Ref.films_id).all())
+    replace = films.difference(genres)
+    for i in replace:
+        push = {"films_id": i[0], "genres_id": 2}
+        Ref.create(push)
