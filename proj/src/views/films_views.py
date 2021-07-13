@@ -180,15 +180,19 @@ class FilmsListViews(Resource):
                 description: user nick
 
         """
+        # filters
         rating = request.args.get("rating")
         director_id = request.args.get("director_id")
-        # genres = request.args.get("genres")
+        genres = request.args.get("genres")
+        period = [request.args.get("period1"), request.args.get("period2")]
         if rating:
             films = Film.query.filter_by(rating=rating)
         elif director_id:
             films = Film.query.filter_by(director_id=director_id)
-        # elif genres:
-        #     films = Film.query.filter(Film.genres.any(Genre.genre.in_(genres)))
+        elif period:
+            films = Film.query.filter(Film.release.between(period[0], period[1]))
+        elif genres:
+            films = Film.query.filter_by(Film.genres.any(Genre.genre.in_([genres])))
         else:
             films = Film.query.all()
 
@@ -213,7 +217,6 @@ class FilmsDel(Resource):
     def delete(self, id):
         """
         ---
-
         delete:
           tags : films
           parameters:
