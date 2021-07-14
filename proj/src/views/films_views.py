@@ -180,11 +180,15 @@ class FilmsListViews(Resource):
                 description: user nick
 
         """
-        # filters
+        # filters_params
         rating = request.args.get("rating")
-        director_id = request.args.get("director_id")
+        director_id = request.args.get("director-id")
         genres = request.args.get("genres")
-        period = [request.args.get("period1"), request.args.get("period2")]
+        period = request.args.getlist("period")
+        # sort_params
+        sort_by_rating = request.args.get("sort-by-rating")
+        sort_by_release = request.args.get("sort-by-release")
+        # filters
         if rating:
             films = Film.query.filter_by(rating=rating)
         elif director_id:
@@ -192,7 +196,18 @@ class FilmsListViews(Resource):
         elif period:
             films = Film.query.filter(Film.release.between(period[0], period[1]))
         elif genres:
-            films = Film.query.filter_by(Film.genres.any(Genre.genre.in_([genres])))
+            films = Film.query.filter(Film.genres.any(Genre.genre.in_([genres])))
+        # sort
+        elif sort_by_rating:
+            films = {
+                sort_by_rating == "asc": Film.query.order_by(Film.rating.asc()),
+                sort_by_rating == "desc": Film.query.order_by(Film.rating.desc()),
+            }[True]
+        elif sort_by_release:
+            films = {
+                sort_by_release == "asc": Film.query.order_by(Film.release.asc()),
+                sort_by_release == "desc": Film.query.order_by(Film.release.desc()),
+            }[True]
         else:
             films = Film.query.all()
 
