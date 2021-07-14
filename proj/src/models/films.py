@@ -1,6 +1,10 @@
+from os import name
+
+from flask_login import current_user
 from sqlalchemy.exc import IntegrityError
 from src.app import db
 from src.models.base import BaseModel
+from src.models.directors import Director
 from src.models.genres import Genre
 
 
@@ -34,25 +38,36 @@ class Film(db.Model, BaseModel):
         result: dict = {}
         # pop genres to exec
         genr = data.pop("genres")
+        # pop director to exec
+        director = data.pop("director")
+
         film = Film(**data)
+        # add directorin relationship table
+        new_director = Film.get_or_crete(
+            Director, name=director[0], sername=director[1]
+        )
+        film.director_id = new_director.id
+        # add genre in relationship table
+        for genre in genr:
+            # check if Genre is already exist
+            new_genre = Film.get_or_crete(Genre, genre=genre)
+            film.genres.append(new_genre)
+        # add user_id by curent user
+        film.user_id = current_user._get_current_object().id
+        film.save()
         try:
-            for genre in genr:
-                # check if Genre is already exist
-                new = Film.get_or_crete(Genre, genre=genre)
-                film.genres.append(new)
-                film.save()
             result = {
                 "title": film.title,
                 "release": str(film.release),
-                "director_id": film.director_id,
+                "director": f"{new_director.name} {new_director.sername}",
                 "description": film.description,
                 "rating": film.rating,
                 "poster": film.poster,
-                "user_id": film.user_id,
+                "user": current_user._get_current_object().nick_name,
                 "genre": [genres.genre for genres in film.genres],
             }
         except IntegrityError as exc:
-            Genre.rollback()
+            Film.rollback()
             result = {"Some errors": str(exc)}
         return result
 
