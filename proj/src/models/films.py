@@ -43,17 +43,16 @@ class Film(db.Model, BaseModel):
 
         film = Film(**data)
         # add directorin relationship table
-        new_director = Film.get_or_crete(
+        film.director_id = Film.get_or_crete(
             Director, name=director[0], sername=director[1]
-        )
-        film.director_id = new_director.id
+        ).id
+        # add user_id by curent user
+        film.user_id = current_user._get_current_object().id
         # add genre in relationship table
         for genre in genr:
             # check if Genre is already exist
             new_genre = Film.get_or_crete(Genre, genre=genre)
             film.genres.append(new_genre)
-        # add user_id by curent user
-        film.user_id = current_user._get_current_object().id
         film.save()
         try:
             result = {
