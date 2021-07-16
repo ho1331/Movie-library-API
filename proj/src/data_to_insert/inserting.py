@@ -4,8 +4,9 @@ from faker import Factory
 from sqlalchemy.exc import IntegrityError
 from src.app import app, db
 from src.models.directors import Director
-from src.models.films import Film, Ref
+from src.models.films import Film
 from src.models.genres import Genre
+from src.models.ref_genre_film import Ref
 from src.models.users import User
 
 

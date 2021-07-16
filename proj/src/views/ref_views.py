@@ -1,7 +1,8 @@
-from flask_restful import Resource
 from flask import request
+from flask_restful import Resource
 from sqlalchemy.exc import IntegrityError
-from src.models.films import Ref
+from src.models.ref_genre_film import Ref
+
 
 class RefList(Resource):
     def post(self):

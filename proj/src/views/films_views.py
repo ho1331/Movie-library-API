@@ -1,5 +1,5 @@
 from flask import request
-from flask_login import login_required  # decorator для ограничения доступа к методу
+from flask_login import login_required  
 from flask_login import current_user
 from flask_restful import Resource
 from sqlalchemy.exc import IntegrityError

@@ -1,4 +1,3 @@
-from os import name
 
 from flask_login import current_user
 from sqlalchemy.exc import IntegrityError
@@ -73,34 +72,3 @@ class Film(db.Model, BaseModel):
             Film.rollback()
             result = {"Some errors": str(exc)}
         return result
-
-
-class Ref(db.Model, BaseModel):
-    """
-    class condition Film and Genre
-    """
-
-    __tablename__ = "ref"
-    __table_args__ = (db.PrimaryKeyConstraint("films_id", "genres_id"),)
-    films_id = db.Column(
-        db.Integer, db.ForeignKey("films.id", ondelete="CASCADE"), nullable=False
-    )
-    genres_id = db.Column(
-        db.Integer, db.ForeignKey("genres.id", ondelete="CASCADE"), nullable=False
-    )
-
-    @staticmethod
-    def create(data: dict) -> dict:
-        """
-        create ref
-        """
-        result: dict = {}
-        ref = Ref(**data)
-        ref.save()
-        result = {
-            "films_id": ref.films_id,
-            "genres_id": ref.genres_id,
-        }
-
-        return result
-
