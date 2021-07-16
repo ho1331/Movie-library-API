@@ -32,4 +32,9 @@ class BaseModel:
             db.session.add(instance)
             db.session.commit()
             return instance
+    
+    @staticmethod
+    def pagination(model, page):
+        threads = model.query.paginate(per_page=10, page=page, error_out=False)
+        return threads
 

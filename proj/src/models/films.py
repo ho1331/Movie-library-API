@@ -43,9 +43,10 @@ class Film(db.Model, BaseModel):
 
         film = Film(**data)
         # add directorin relationship table
-        film.director_id = Film.get_or_crete(
+        new_director = Film.get_or_crete(
             Director, name=director[0], sername=director[1]
-        ).id
+        )
+        film.director_id = new_director.id
         # add user_id by curent user
         film.user_id = current_user._get_current_object().id
         # add genre in relationship table
