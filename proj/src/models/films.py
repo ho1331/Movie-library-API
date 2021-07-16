@@ -17,7 +17,7 @@ class Film(db.Model, BaseModel):
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     title = db.Column(db.String(100), unique=False, nullable=False)
     release = db.Column(db.Date, unique=False, nullable=False)
-    director_id = db.Column(db.Integer, db.ForeignKey("directors.id"), nullable=False)
+    director_id = db.Column(db.Integer, db.ForeignKey("directors.id", ondelete="SET NULL"), nullable=True)
     description = db.Column(db.String, default="description", nullable=False)
     rating = db.Column(
         db.Float,
