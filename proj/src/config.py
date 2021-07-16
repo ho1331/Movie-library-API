@@ -14,3 +14,6 @@ class Config:
     SQLALCHEMY_DATABASE_URI = (
         f"postgresql+psycopg2://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:5432"
     )
+
+    # DOC
+    SWAGGER = {"title": "Project documentation", "doc_dir": "./docs/"}

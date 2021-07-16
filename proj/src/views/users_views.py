@@ -1,11 +1,6 @@
 from flask import request
-
-# from flask_apispec import doc, marshal_with, use_kwargs
-# from flask_apispec.views import MethodResource
 from flask_restful import Resource
 from sqlalchemy.exc import IntegrityError
-
-# from src.docs.base_info import AwesomeRequestSchema, AwesomeResponseSchema
 from src.models.users import User
 
 
@@ -45,9 +40,16 @@ class Users(Resource):
                     description: The period of user registration
 
         """
-        user = User.get(id)
-        return user, 200
-        # return {'username': username}, 200
+        user = User.query.filter_by(id=id).first_or_404()
+        serialized_data = {
+            "id": user.id,
+            "name": user.name,
+            "nick_name": user.nick_name,
+            "email": user.email,
+            "password": user.pswhash,
+            "date_created": str(user.created),
+        }
+        return serialized_data, 200
 
 
 class UsersList(Resource):

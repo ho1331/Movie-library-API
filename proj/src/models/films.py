@@ -28,6 +28,7 @@ class Film(db.Model, BaseModel):
     user_id = db.Column(
         db.Integer, db.ForeignKey("users.id", ondelete="CASCADE"), nullable=False
     )
+    is_admin = db.Column(db.Boolean, default=False)
     genres = db.relationship("Genre", secondary="ref", backref="films", lazy=True)
 
     @staticmethod
@@ -65,6 +66,7 @@ class Film(db.Model, BaseModel):
                 "poster": film.poster,
                 "user": current_user._get_current_object().nick_name,
                 "genre": [genres.genre for genres in film.genres],
+                "is_admin": film.is_admin,
             }
         except IntegrityError as exc:
             Film.rollback()

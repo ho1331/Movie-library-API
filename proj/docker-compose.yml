@@ -22,6 +22,8 @@ services:
       - ./.env
     volumes:
       - ./src:/app/src
+    # stdin_open: true
+    # tty: true
 
   nginx:
     image: "nginx:latest"

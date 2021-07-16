@@ -50,21 +50,6 @@ class User(db.Model, BaseModel, UserMixin):
 
         return result
 
-    @staticmethod
-    def get(id: int) -> dict:
-        """
-        Query a user by id
-        """
-        user = User.query.filter_by(id=id).first_or_404()
-        return {
-            "id": user.id,
-            "name": user.name,
-            "nick_name": user.nick_name,
-            "email": user.email,
-            "password": user.pswhash,
-            "date_created": str(user.created),
-        }
-
     def set_password(self, password):
         self.pswhash = generate_password_hash(password, method="sha256")
         return self.pswhash

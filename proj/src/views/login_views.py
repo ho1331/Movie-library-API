@@ -1,8 +1,7 @@
-from flask import Blueprint, flash, redirect, render_template, request, url_for
+from flask import redirect, request
 from flask_login import current_user, login_required, login_user, logout_user
 from flask_restful import Resource
 from sqlalchemy.exc import IntegrityError
-from src.forms.loginform import LoginForm
 from src.models.users import User
 
 
@@ -10,16 +9,18 @@ class LoginApi(Resource):
     def post(self):
         body = request.get_json()
         user = User.query.filter_by(email=body.get("login")).first()
+        if not user:
+            return {"error": "Invalid email"}, 401
         authorized = user.check_password(body.get("password"))
         if not authorized:
-            return {"error": "Email or password invalid"}, 401
+            return {"error": "Invalid password"}, 401
 
         login_user(user, remember=True)
-        return redirect("/api/films/")
+        return redirect("/api/done/")
 
     def get(self):
         if current_user.is_authenticated:
-            return redirect("/api/films/")
+            return redirect("/api/done/")
         # here will be sign(registration) form
         form = {"login": "", "password": ""}
         return form, 200
