@@ -1,9 +1,11 @@
-from datetime import date, datetime
 from os import name
 
+from flask_login import current_user
 from sqlalchemy.exc import IntegrityError
 from src.app import db
 from src.models.base import BaseModel
+from src.models.directors import Director
+from src.models.genres import Genre
 
 
 class Film(db.Model, BaseModel):
@@ -17,16 +19,16 @@ class Film(db.Model, BaseModel):
     release = db.Column(db.Date, unique=False, nullable=False)
     director_id = db.Column(db.Integer, db.ForeignKey("directors.id"), nullable=False)
     description = db.Column(db.String, default="description", nullable=False)
-    reting = db.Column(
+    rating = db.Column(
         db.Float,
-        db.CheckConstraint("1 <= reting AND reting<= 10"),
+        db.CheckConstraint("1 <= rating AND rating<= 10"),
         nullable=False,
     )
     poster = db.Column(db.String(255), unique=True, nullable=False)
     user_id = db.Column(
         db.Integer, db.ForeignKey("users.id", ondelete="CASCADE"), nullable=False
     )
-    genres = db.relationship("Genre", secondary="ref", lazy=True)
+    genres = db.relationship("Genre", secondary="ref", backref="films", lazy=True)
 
     @staticmethod
     def create(data: dict) -> dict:
@@ -34,18 +36,39 @@ class Film(db.Model, BaseModel):
         create user
         """
         result: dict = {}
-        film = Film(**data)
-        film.save()
-        result = {
-            "title": film.title,
-            "release": film.release,
-            "director_id": film.director_id,
-            "description": film.description,
-            "reting": film.reting,
-            "poster": film.poster,
-            "user_id": film.user_id,
-        }
+        # pop genres to exec
+        genr = data.pop("genres")
+        # pop director to exec
+        director = data.pop("director")
 
+        film = Film(**data)
+        # add directorin relationship table
+        new_director = Film.get_or_crete(
+            Director, name=director[0], sername=director[1]
+        )
+        film.director_id = new_director.id
+        # add user_id by curent user
+        film.user_id = current_user._get_current_object().id
+        # add genre in relationship table
+        for genre in genr:
+            # check if Genre is already exist
+            new_genre = Film.get_or_crete(Genre, genre=genre)
+            film.genres.append(new_genre)
+        film.save()
+        try:
+            result = {
+                "title": film.title,
+                "release": str(film.release),
+                "director": f"{new_director.name} {new_director.sername}",
+                "description": film.description,
+                "rating": film.rating,
+                "poster": film.poster,
+                "user": current_user._get_current_object().nick_name,
+                "genre": [genres.genre for genres in film.genres],
+            }
+        except IntegrityError as exc:
+            Film.rollback()
+            result = {"Some errors": str(exc)}
         return result
 
 
@@ -66,7 +89,7 @@ class Ref(db.Model, BaseModel):
     @staticmethod
     def create(data: dict) -> dict:
         """
-        create user
+        create ref
         """
         result: dict = {}
         ref = Ref(**data)
