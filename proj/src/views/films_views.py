@@ -128,7 +128,7 @@ class FilmsList(Resource):
                     description: user id by film
         """
         # films = Film.query.all()
-        films = Film.query.paginate(1, 10, False).items
+        films = Film.query.all()
         serialized_data = [
             {
                 "id": film.id,
@@ -248,7 +248,9 @@ class FilmsListViews(Resource):
                 "id": film.id,
                 "title": film.title,
                 "release": str(film.release),
-                "director": f"{film.directors.name} {film.directors.sername}",
+                "director": f"{film.directors.name} {film.directors.sername}"
+                if film.director_id
+                else "unknown",
                 "description": film.description,
                 "rating": film.rating,
                 "poster": film.poster,
