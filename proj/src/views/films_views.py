@@ -1,5 +1,6 @@
 from flask import request
 from flask_login import login_required  # decorator для ограничения доступа к методу
+from flask_login import current_user
 from flask_restful import Resource
 from sqlalchemy.exc import IntegrityError
 from src.app import db
@@ -263,31 +264,34 @@ class FilmsListViews(Resource):
 
 
 class FilmsItem(Resource):
+    @login_required
     def patch(self, id):
         request_json = request.get_json(silent=True)
-        director = request_json.get("director")
-        request_genre = request_json.get("genres")
-        Film.query.filter_by(id=id).update(
-            {
-                "title": request_json.get("title"),
-                "release": request_json.get(str("release")),
-                "director_id": Film.get_or_crete(
-                    Director, name=director[0], sername=director[1]
-                ).id,
-                "description": request_json.get("description"),
-                "rating": request_json.get("rating"),
-                "poster": request_json.get("poster"),
-            }
-        )
+        director = request_json.pop("director", None)
+        request_genre = request_json.pop("genres", None)
         film = db.session.query(Film).get(id)
-        film.genres = []
-        for genre in request_genre:
-            # check if Genre is already exist
-            new_genre = Film.get_or_crete(Genre, genre=genre)
-            film.genres.append(new_genre)
+        if current_user.id == film.user_id or current_user.is_admin == True:
+            Film.query.filter_by(id=id).update(request_json)
+            # relation update director
+            if director:
+                Film.query.filter_by(id=id).update(
+                    {
+                        "director_id": Film.get_or_crete(
+                            Director, name=director[0], sername=director[1]
+                        ).id
+                    }
+                )
+            # relation update genre
+            if request_genre:
+                film.genres = []
+                for genre in request_genre:
+                    # check if Genre is already exist
+                    new_genre = Film.get_or_crete(Genre, genre=genre)
+                    film.genres.append(new_genre)
 
-        db.session.commit()
-        return f"Success. Film with id={id} was updated", 200
+            db.session.commit()
+            return f"Success. Film with id={id} was updated", 200
+        return f"Not enough permissions to access", 200
 
     @login_required
     def delete(self, id):
@@ -306,6 +310,8 @@ class FilmsItem(Resource):
             "404":
                 description: "Film not found"
         """
-        Film.query.filter(Film.id == id).delete()
-        Film.commit()
-        return f"Quote with id {id} is deleted.", 200
+        if current_user.is_admin == True:
+            Film.query.filter(Film.id == id).delete()
+            Film.commit()
+            return f"Quote with id {id} is deleted.", 200
+        return f"Not enough permissions to access", 200

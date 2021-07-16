@@ -17,7 +17,9 @@ class Film(db.Model, BaseModel):
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     title = db.Column(db.String(100), unique=False, nullable=False)
     release = db.Column(db.Date, unique=False, nullable=False)
-    director_id = db.Column(db.Integer, db.ForeignKey("directors.id", ondelete="SET NULL"), nullable=True)
+    director_id = db.Column(
+        db.Integer, db.ForeignKey("directors.id", ondelete="SET NULL"), nullable=True
+    )
     description = db.Column(db.String, default="description", nullable=False)
     rating = db.Column(
         db.Float,
@@ -28,7 +30,7 @@ class Film(db.Model, BaseModel):
     user_id = db.Column(
         db.Integer, db.ForeignKey("users.id", ondelete="CASCADE"), nullable=False
     )
-    is_admin = db.Column(db.Boolean, default=False)
+
     genres = db.relationship("Genre", secondary="ref", backref="films", lazy=True)
 
     @staticmethod
@@ -66,7 +68,6 @@ class Film(db.Model, BaseModel):
                 "poster": film.poster,
                 "user": current_user._get_current_object().nick_name,
                 "genre": [genres.genre for genres in film.genres],
-                "is_admin": film.is_admin,
             }
         except IntegrityError as exc:
             Film.rollback()
@@ -102,3 +103,4 @@ class Ref(db.Model, BaseModel):
         }
 
         return result
+

@@ -19,29 +19,37 @@ class User(db.Model, BaseModel, UserMixin):
     email = db.Column(db.String(150), unique=True, nullable=False)
     pswhash = db.Column(db.String(100), unique=True, nullable=False)
     created = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+    is_admin = db.Column(db.Boolean, default=False)
     films = db.relationship("Film", backref="users", lazy=True)
 
-    def __init__(self, name: str, nick_name: str, email: str, pswhash: str) -> None:
+    def __init__(
+        self,
+        name: str,
+        nick_name: str,
+        email: str,
+        password: str,
+        is_admin: bool = False,
+    ) -> None:
         self.name = name
         self.nick_name = nick_name
         self.email = email
-        self.pswhash = pswhash
+        self.pswhash = password
+        self.is_admin = is_admin
 
     @staticmethod
-    def create(username: str, usernick: str, useremail: str, upass: str) -> dict:
+    def create(data: dict) -> dict:
         """
         create user
         """
         result: dict = {}
         try:
-            user = User(
-                name=username, nick_name=usernick, email=useremail, pswhash=upass
-            )
+            user = User(**data)
             result = {
                 "name": user.name,
                 "nick_name": user.nick_name,
                 "email": user.email,
                 "password": user.set_password(user.pswhash),
+                "is_admin": user.is_admin,
             }
             user.save()
         except IntegrityError as exc:

@@ -108,12 +108,7 @@ class UsersList(Resource):
         request_json = request.get_json(silent=True)
         # client add new user
         try:
-            user = User.create(
-                request_json.get("username"),
-                request_json.get("usernick"),
-                request_json.get("useremail"),
-                request_json.get("upass"),
-            )
+            user = User.create(request_json)
         except IntegrityError as exc:
             User.rollback()
             user = {"Some errors": str(exc)}
