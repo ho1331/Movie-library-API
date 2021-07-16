@@ -127,7 +127,8 @@ class FilmsList(Resource):
                     type: integer
                     description: user id by film
         """
-        films = Film.query.all()
+        # films = Film.query.all()
+        films = Film.query.paginate(1, 10, False).items
         serialized_data = [
             {
                 "id": film.id,
@@ -138,7 +139,7 @@ class FilmsList(Resource):
                 "rating": film.rating,
                 "poster": film.poster,
                 "user_id": film.user_id,
-                "genres": [genre.genre for genre in film.genres],
+                "genres": [genre.id for genre in film.genres],
             }
             for film in films
         ]
@@ -182,8 +183,13 @@ class FilmsListViews(Resource):
                 description: user nick
 
         """
+        # paginate
+        per_page = 10
+        paginate = request.args.get("per_page")
+        if paginate:
+            per_page = paginate
         # partial match search
-        part = request.args.get("part")
+        part = request.args.get("part_title")
         # filters_params
         rating = request.args.get("rating")
         director_id = request.args.get("director-id")
@@ -194,28 +200,48 @@ class FilmsListViews(Resource):
         sort_by_release = request.args.get("sort-by-release")
         # filters
         if part:
-            films = Film.query.filter(Film.title.like(f"%{part}%")).all()
+            films = (
+                Film.query.filter(Film.title.like(f"%{part}%"))
+                .paginate(per_page=int(per_page), error_out=False)
+                .items
+            )
         elif rating:
             films = Film.query.filter_by(rating=rating)
         elif director_id:
             films = Film.query.filter_by(director_id=director_id)
         elif period:
-            films = Film.query.filter(Film.release.between(period[0], period[1]))
+            films = (
+                Film.query.filter(Film.release.between(period[0], period[1]))
+                .paginate(per_page=int(per_page), error_out=False)
+                .items
+            )
         elif genres:
-            films = Film.query.filter(Film.genres.any(Genre.genre.in_([genres])))
+            films = (
+                Film.query.filter(Film.genres.any(Genre.genre.in_([genres])))
+                .paginate(per_page=int(per_page), error_out=False)
+                .items
+            )
         # sort
         elif sort_by_rating:
-            films = {
-                sort_by_rating == "asc": Film.query.order_by(Film.rating.asc()),
-                sort_by_rating == "desc": Film.query.order_by(Film.rating.desc()),
-            }[True]
+            films = (
+                {
+                    sort_by_rating == "asc": Film.query.order_by(Film.rating.asc()),
+                    sort_by_rating == "desc": Film.query.order_by(Film.rating.desc()),
+                }[True]
+                .paginate(per_page=int(per_page), error_out=False)
+                .items
+            )
         elif sort_by_release:
-            films = {
-                sort_by_release == "asc": Film.query.order_by(Film.release.asc()),
-                sort_by_release == "desc": Film.query.order_by(Film.release.desc()),
-            }[True]
+            films = (
+                {
+                    sort_by_release == "asc": Film.query.order_by(Film.release.asc()),
+                    sort_by_release == "desc": Film.query.order_by(Film.release.desc()),
+                }[True]
+                .paginate(per_page=int(per_page), error_out=False)
+                .items
+            )
         else:
-            films = Film.query.all()
+            films = Film.query.paginate(per_page=int(per_page), error_out=False).items
 
         serialized_data = [
             {
