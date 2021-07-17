@@ -112,7 +112,7 @@ class DirectorsItem(Resource):
                 loging.info(id, "SUCCESS. Deleted director with id")
             except SQLAlchemyError as exp:
                 return {"DELETE Error": f"{id} not FOUND, {exp}"}
-            return {"Success": f"Director with id {id} is deleted."}, 200
+            return {"Success": f"Director with id {id} is deleted."}, 204
         loging.debug(
             "only admin",
             "FAIL. Not enough permissions to access",

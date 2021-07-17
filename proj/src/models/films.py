@@ -1,4 +1,6 @@
 """Film model"""
+from operator import index
+
 from flask_login import current_user
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import validates
@@ -16,7 +18,7 @@ class Film(db.Model, BaseModel):
     __tablename__ = "films"
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     title = db.Column(db.String(100), unique=False, nullable=False)
-    release = db.Column(db.Date, unique=False, nullable=False)
+    release = db.Column(db.Date, unique=False, nullable=False, index=True)
     director_id = db.Column(
         db.Integer, db.ForeignKey("directors.id", ondelete="SET NULL"), nullable=True
     )
