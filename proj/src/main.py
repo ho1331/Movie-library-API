@@ -2,7 +2,7 @@ from flasgger import Swagger
 from flask_restful import Api
 
 from src.app import app
-from src.data_to_insert.inserting import after_create
+from src.tools.inserting import after_create
 from src.views.directors_views import DirectorsItem, DirectorsList
 from src.views.errors_views import Done, Errors
 from src.views.films_views import FilmsItem, FilmsList, FilmsListViews

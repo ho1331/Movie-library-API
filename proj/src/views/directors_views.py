@@ -1,10 +1,9 @@
 from flask import request
-from flask_login.utils import login_required
+from flask_login.utils import current_user, login_required
 from flask_restful import Resource
 from sqlalchemy.exc import IntegrityError
-from src.app import db
 from src.models.directors import Director
-from src.models.films import Film
+from src.tools.logging import loging
 
 
 class DirectorsList(Resource):
@@ -51,7 +50,9 @@ class DirectorsList(Resource):
                 request_json.get("dirname"),
                 request_json.get("sername"),
             )
+            loging.debug(request_json, "SUCCESS: Created director with parametrs")
         except IntegrityError as exc:
+            loging.exept(f"ERROR: bad arguments in request")
             Director.rollback()
             director = {"Some errors": str(exc)}
 
@@ -107,6 +108,13 @@ class DirectorsItem(Resource):
             "404":
                 description: "Director not found"
         """
-        Director.query.filter(Director.id == id).delete()
-        Director.commit()
-        return f"Director with id {id} is deleted.", 200
+        if current_user.is_admin == True:
+            Director.query.filter(Director.id == id).delete()
+            Director.commit()
+            loging.info(id, "SUCCESS. Deleted director with id")
+            return f"Director with id {id} is deleted.", 200
+        loging.debug(
+            "only admin",
+            "FAIL. Not enough permissions to access",
+        )
+        return f"Not enough permissions to access", 200

@@ -2,6 +2,7 @@ from flask import request
 from flask_restful import Resource
 from sqlalchemy.exc import IntegrityError
 from src.models.users import User
+from src.tools.logging import loging
 
 
 class Users(Resource):
@@ -109,7 +110,9 @@ class UsersList(Resource):
         # client add new user
         try:
             user = User.create(request_json)
+            loging.debug(request_json, "SUCCESS: Created user with parametrs")
         except IntegrityError as exc:
+            loging.exept(f"ERROR: bad arguments in request")
             User.rollback()
             user = {"Some errors": str(exc)}
 

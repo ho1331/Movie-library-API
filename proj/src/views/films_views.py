@@ -1,15 +1,12 @@
-import re
-
 from flask import request
 from flask_login import current_user, login_required
 from flask_restful import Resource
 from sqlalchemy.exc import IntegrityError
 from src.app import db
 from src.models.directors import Director
-
-##
 from src.models.films import Film
 from src.models.genres import Genre
+from src.tools.logging import loging
 
 
 class FilmsList(Resource):
@@ -88,7 +85,9 @@ class FilmsList(Resource):
         request_json = request.get_json(silent=True)
         try:
             film = Film.create(request_json)
+            loging.debug(request_json, "SUCCESS: Created film with parametrs")
         except IntegrityError as exc:
+            loging.exept(f"ERROR: bad arguments in request")
             Film.rollback()
             film = {"Some errors": str(exc)}
 
@@ -281,6 +280,7 @@ class FilmsItem(Resource):
         director = request_json.pop("director", None)
         request_genre = request_json.pop("genres", None)
         film = db.session.query(Film).get(id)
+        # check update (only films created user or admin)
         if current_user.id == film.user_id or current_user.is_admin == True:
             Film.query.filter_by(id=id).update(request_json)
             # relation update director
@@ -301,7 +301,9 @@ class FilmsItem(Resource):
                     film.genres.append(new_genre)
 
             db.session.commit()
+            loging.info(id, "SUCCESS. Updated film with id")
             return f"Success. Film with id={id} was updated", 200
+        loging.debug(id, "FAIL. Not enough permissions to access. BAD user_id")
         return f"Not enough permissions to access", 200
 
     @login_required
@@ -321,8 +323,14 @@ class FilmsItem(Resource):
             "404":
                 description: "Film not found"
         """
-        if current_user.is_admin == True:
+        film = db.session.query(Film).get(id)
+        if current_user.id == film.user_id or current_user.is_admin == True:
             Film.query.filter(Film.id == id).delete()
             Film.commit()
-            return f"Quote with id {id} is deleted.", 200
+            loging.info(id, "SUCCESS. Deleted film with id")
+            return f"Film with id {id} was deleted.", 200
+        loging.debug(
+            f"{film.user_id} != {current_user.id}",
+            "FAIL. Not enough permissions to access (explaine: film.user_id==user.id",
+        )
         return f"Not enough permissions to access", 200

@@ -1,0 +1,174 @@
+2021-07-17 11:25:55,037 - Invalid password : 23
+2021-07-17 11:26:45,390 - Invalid email : None
+2021-07-17 11:27:33,755 - Invalid email : None
+2021-07-17 11:28:47,915 - Invalid email : Hjkdk
+2021-07-17 11:33:36,395 - Success! Login with nick_name : ввMdtokro13
+2021-07-17 11:38:06,090 - Success! Login with nick_name : ввMdtokro13
+2021-07-17 11:38:44,702 - Success! Login with nick_name : ввMdtokro13
+2021-07-17 11:38:48,898 - User was logout with nick_name : ввMdtokro13
+2021-07-17 11:50:55,682 - Success! Login with nick_name : ввMdtokro13
+2021-07-17 12:00:39,511 - User was logout with nick_name : ввMdtokro13
+2021-07-17 12:01:27,593:DEBUG - Success! Login with nick_name : ввMdtokro13
+2021-07-17 12:07:02,408:DEBUG - Success! Login with nick_name : ввMdtokro13
+2021-07-17 13:49:51,557:INFO - Success! Login with nick_name : ввMdtokro13
+2021-07-17 13:50:00,971:INFO - Success! Login with nick_name : ввMdtokro13
+2021-07-17 13:51:07,535:INFO - User was logout with nick_name : ввMdtokro13
+2021-07-17 13:51:15,804:DEBUG - FAIL: Invalid password : 3
+2021-07-17 13:51:23,715:DEBUG - FAIL: Invalid email : 22
+2021-07-17 13:51:28,041:DEBUG - FAIL: Invalid email : 22
+2021-07-17 13:51:35,109:INFO - Success! Login with nick_name : ввMdtokro13
+2021-07-17 13:53:13,259:INFO - User was logout with nick_name : ввMdtokro13
+2021-07-17 13:53:16,790:INFO - SUCCESS! Login with nick_name : ввMdtokro13
+2021-07-17 13:53:48,237:INFO - User was logout with nick_name : ввMdtokro13
+2021-07-17 13:53:51,970:INFO - SUCCESS: Login with nick_name : ввMdtokro13
+2021-07-17 13:58:26,707:ERROR:src.tools.logging - ERROR: bad arguments in json
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.9/site-packages/sqlalchemy/engine/base.py", line 1770, in _execute_context
+    self.dialect.do_execute(
+  File "/usr/local/lib/python3.9/site-packages/sqlalchemy/engine/default.py", line 717, in do_execute
+    cursor.execute(statement, parameters)
+psycopg2.errors.UniqueViolation: duplicate key value violates unique constraint "films_poster_key"
+DETAIL:  Key (poster)=(ук75d22kffejt255fдfffhddльп) already exists.
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/app/src/views/films_views.py", line 94, in post
+    film = Film.create(request_json)
+  File "/app/src/models/films.py", line 57, in create
+    new_genre = Film.get_or_crete(Genre, genre=genre)
+  File "/app/src/models/base.py", line 27, in get_or_crete
+    instance = model.query.filter_by(**kwargs).first()
+  File "/usr/local/lib/python3.9/site-packages/sqlalchemy/orm/query.py", line 2760, in first
+    return self.limit(1)._iter().first()
+  File "/usr/local/lib/python3.9/site-packages/sqlalchemy/orm/query.py", line 2844, in _iter
+    result = self.session.execute(
+  File "/usr/local/lib/python3.9/site-packages/sqlalchemy/orm/session.py", line 1637, in execute
+    ) = compile_state_cls.orm_pre_session_exec(
+  File "/usr/local/lib/python3.9/site-packages/sqlalchemy/orm/context.py", line 289, in orm_pre_session_exec
+    session._autoflush()
+  File "/usr/local/lib/python3.9/site-packages/sqlalchemy/orm/session.py", line 2204, in _autoflush
+    util.raise_(e, with_traceback=sys.exc_info()[2])
+  File "/usr/local/lib/python3.9/site-packages/sqlalchemy/util/compat.py", line 207, in raise_
+    raise exception
+  File "/usr/local/lib/python3.9/site-packages/sqlalchemy/orm/session.py", line 2193, in _autoflush
+    self.flush()
+  File "/usr/local/lib/python3.9/site-packages/sqlalchemy/orm/session.py", line 3298, in flush
+    self._flush(objects)
+  File "/usr/local/lib/python3.9/site-packages/sqlalchemy/orm/session.py", line 3438, in _flush
+    transaction.rollback(_capture_exception=True)
+  File "/usr/local/lib/python3.9/site-packages/sqlalchemy/util/langhelpers.py", line 70, in __exit__
+    compat.raise_(
+  File "/usr/local/lib/python3.9/site-packages/sqlalchemy/util/compat.py", line 207, in raise_
+    raise exception
+  File "/usr/local/lib/python3.9/site-packages/sqlalchemy/orm/session.py", line 3398, in _flush
+    flush_context.execute()
+  File "/usr/local/lib/python3.9/site-packages/sqlalchemy/orm/unitofwork.py", line 456, in execute
+    rec.execute(self)
+  File "/usr/local/lib/python3.9/site-packages/sqlalchemy/orm/unitofwork.py", line 630, in execute
+    util.preloaded.orm_persistence.save_obj(
+  File "/usr/local/lib/python3.9/site-packages/sqlalchemy/orm/persistence.py", line 242, in save_obj
+    _emit_insert_statements(
+  File "/usr/local/lib/python3.9/site-packages/sqlalchemy/orm/persistence.py", line 1219, in _emit_insert_statements
+    result = connection._execute_20(
+  File "/usr/local/lib/python3.9/site-packages/sqlalchemy/engine/base.py", line 1582, in _execute_20
+    return meth(self, args_10style, kwargs_10style, execution_options)
+  File "/usr/local/lib/python3.9/site-packages/sqlalchemy/sql/elements.py", line 323, in _execute_on_connection
+    return connection._execute_clauseelement(
+  File "/usr/local/lib/python3.9/site-packages/sqlalchemy/engine/base.py", line 1451, in _execute_clauseelement
+    ret = self._execute_context(
+  File "/usr/local/lib/python3.9/site-packages/sqlalchemy/engine/base.py", line 1813, in _execute_context
+    self._handle_dbapi_exception(
+  File "/usr/local/lib/python3.9/site-packages/sqlalchemy/engine/base.py", line 1994, in _handle_dbapi_exception
+    util.raise_(
+  File "/usr/local/lib/python3.9/site-packages/sqlalchemy/util/compat.py", line 207, in raise_
+    raise exception
+  File "/usr/local/lib/python3.9/site-packages/sqlalchemy/engine/base.py", line 1770, in _execute_context
+    self.dialect.do_execute(
+  File "/usr/local/lib/python3.9/site-packages/sqlalchemy/engine/default.py", line 717, in do_execute
+    cursor.execute(statement, parameters)
+sqlalchemy.exc.IntegrityError: (raised as a result of Query-invoked autoflush; consider using a session.no_autoflush block if this flush is occurring prematurely)
+(psycopg2.errors.UniqueViolation) duplicate key value violates unique constraint "films_poster_key"
+DETAIL:  Key (poster)=(ук75d22kffejt255fдfffhddльп) already exists.
+
+[SQL: INSERT INTO films (title, release, director_id, description, rating, poster, user_id) VALUES (%(title)s, %(release)s, %(director_id)s, %(description)s, %(rating)s, %(poster)s, %(user_id)s) RETURNING films.id]
+[parameters: {'title': 'GHJ', 'release': '2017-3-18', 'director_id': 35, 'description': 'afr оaid in all time', 'rating': 7.1, 'poster': 'ук75d22kffejt255fдfffhddльп', 'user_id': 62}]
+(Background on this error at: http://sqlalche.me/e/14/gkpj)
+2021-07-17 14:01:00,673:ERROR:src.tools.logging - ERROR: bad arguments in request
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.9/site-packages/sqlalchemy/engine/base.py", line 1770, in _execute_context
+    self.dialect.do_execute(
+  File "/usr/local/lib/python3.9/site-packages/sqlalchemy/engine/default.py", line 717, in do_execute
+    cursor.execute(statement, parameters)
+psycopg2.errors.UniqueViolation: duplicate key value violates unique constraint "films_poster_key"
+DETAIL:  Key (poster)=(ук75d22kffejt255fдfffhddльп) already exists.
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/app/src/views/films_views.py", line 94, in post
+    film = Film.create(request_json)
+  File "/app/src/models/films.py", line 57, in create
+    new_genre = Film.get_or_crete(Genre, genre=genre)
+  File "/app/src/models/base.py", line 27, in get_or_crete
+    instance = model.query.filter_by(**kwargs).first()
+  File "/usr/local/lib/python3.9/site-packages/sqlalchemy/orm/query.py", line 2760, in first
+    return self.limit(1)._iter().first()
+  File "/usr/local/lib/python3.9/site-packages/sqlalchemy/orm/query.py", line 2844, in _iter
+    result = self.session.execute(
+  File "/usr/local/lib/python3.9/site-packages/sqlalchemy/orm/session.py", line 1637, in execute
+    ) = compile_state_cls.orm_pre_session_exec(
+  File "/usr/local/lib/python3.9/site-packages/sqlalchemy/orm/context.py", line 289, in orm_pre_session_exec
+    session._autoflush()
+  File "/usr/local/lib/python3.9/site-packages/sqlalchemy/orm/session.py", line 2204, in _autoflush
+    util.raise_(e, with_traceback=sys.exc_info()[2])
+  File "/usr/local/lib/python3.9/site-packages/sqlalchemy/util/compat.py", line 207, in raise_
+    raise exception
+  File "/usr/local/lib/python3.9/site-packages/sqlalchemy/orm/session.py", line 2193, in _autoflush
+    self.flush()
+  File "/usr/local/lib/python3.9/site-packages/sqlalchemy/orm/session.py", line 3298, in flush
+    self._flush(objects)
+  File "/usr/local/lib/python3.9/site-packages/sqlalchemy/orm/session.py", line 3438, in _flush
+    transaction.rollback(_capture_exception=True)
+  File "/usr/local/lib/python3.9/site-packages/sqlalchemy/util/langhelpers.py", line 70, in __exit__
+    compat.raise_(
+  File "/usr/local/lib/python3.9/site-packages/sqlalchemy/util/compat.py", line 207, in raise_
+    raise exception
+  File "/usr/local/lib/python3.9/site-packages/sqlalchemy/orm/session.py", line 3398, in _flush
+    flush_context.execute()
+  File "/usr/local/lib/python3.9/site-packages/sqlalchemy/orm/unitofwork.py", line 456, in execute
+    rec.execute(self)
+  File "/usr/local/lib/python3.9/site-packages/sqlalchemy/orm/unitofwork.py", line 630, in execute
+    util.preloaded.orm_persistence.save_obj(
+  File "/usr/local/lib/python3.9/site-packages/sqlalchemy/orm/persistence.py", line 242, in save_obj
+    _emit_insert_statements(
+  File "/usr/local/lib/python3.9/site-packages/sqlalchemy/orm/persistence.py", line 1219, in _emit_insert_statements
+    result = connection._execute_20(
+  File "/usr/local/lib/python3.9/site-packages/sqlalchemy/engine/base.py", line 1582, in _execute_20
+    return meth(self, args_10style, kwargs_10style, execution_options)
+  File "/usr/local/lib/python3.9/site-packages/sqlalchemy/sql/elements.py", line 323, in _execute_on_connection
+    return connection._execute_clauseelement(
+  File "/usr/local/lib/python3.9/site-packages/sqlalchemy/engine/base.py", line 1451, in _execute_clauseelement
+    ret = self._execute_context(
+  File "/usr/local/lib/python3.9/site-packages/sqlalchemy/engine/base.py", line 1813, in _execute_context
+    self._handle_dbapi_exception(
+  File "/usr/local/lib/python3.9/site-packages/sqlalchemy/engine/base.py", line 1994, in _handle_dbapi_exception
+    util.raise_(
+  File "/usr/local/lib/python3.9/site-packages/sqlalchemy/util/compat.py", line 207, in raise_
+    raise exception
+  File "/usr/local/lib/python3.9/site-packages/sqlalchemy/engine/base.py", line 1770, in _execute_context
+    self.dialect.do_execute(
+  File "/usr/local/lib/python3.9/site-packages/sqlalchemy/engine/default.py", line 717, in do_execute
+    cursor.execute(statement, parameters)
+sqlalchemy.exc.IntegrityError: (raised as a result of Query-invoked autoflush; consider using a session.no_autoflush block if this flush is occurring prematurely)
+(psycopg2.errors.UniqueViolation) duplicate key value violates unique constraint "films_poster_key"
+DETAIL:  Key (poster)=(ук75d22kffejt255fдfffhddльп) already exists.
+
+[SQL: INSERT INTO films (title, release, director_id, description, rating, poster, user_id) VALUES (%(title)s, %(release)s, %(director_id)s, %(description)s, %(rating)s, %(poster)s, %(user_id)s) RETURNING films.id]
+[parameters: {'title': 'GHJ', 'release': '2017-3-18', 'director_id': 35, 'description': 'afr оaid in all time', 'rating': 7.1, 'poster': 'ук75d22kffejt255fдfffhddльп', 'user_id': 62}]
+(Background on this error at: http://sqlalche.me/e/14/gkpj)
+2021-07-17 14:06:27,342:DEBUG:src.tools.logging - SUCCESS: Created film with parametrs : {'title': 'GHJ', 'release': '2017-3-18', 'description': 'afr оaid in all time', 'rating': 7.1, 'poster': 'ук75d22kffejtf255fдfffhddльп'}
+2021-07-17 14:36:34,419:INFO:src.tools.logging - SUCCESS. Deleted film with id : 8
+2021-07-17 14:57:11,735:INFO:src.tools.logging - User was logout with nick_name : ввMdtokro13
