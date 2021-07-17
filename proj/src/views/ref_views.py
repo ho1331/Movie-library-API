@@ -2,6 +2,7 @@ from flask import request
 from flask_restful import Resource
 from sqlalchemy.exc import IntegrityError
 from src.models.ref_genre_film import Ref
+from src.tools.logging import loging
 
 
 class RefList(Resource):
@@ -9,7 +10,9 @@ class RefList(Resource):
         request_json = request.get_json(silent=True)
         try:
             ref = Ref.create(request_json)
+            loging.debug(request_json, "SUCCESS: Created ref-list with parametrs")
         except IntegrityError as exc:
+            loging.exept(f"ERROR: bad arguments in request")
             Ref.rollback()
             ref = {"Some errors": str(exc)}
         return ref, 200

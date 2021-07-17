@@ -2,6 +2,7 @@ from flask import request
 from flask_restful import Resource
 from sqlalchemy.exc import IntegrityError
 from src.models.genres import Genre
+from src.tools.logging import loging
 
 
 class GenresList(Resource):
@@ -41,7 +42,9 @@ class GenresList(Resource):
             genres = Genre.create(
                 request_json.get("genre"),
             )
+            loging.debug(request_json, "SUCCESS: Created genre with parametrs")
         except IntegrityError as exc:
+            loging.exept(f"ERROR: bad arguments in request")
             Genre.rollback()
             genres = {"Some errors": str(exc)}
 
