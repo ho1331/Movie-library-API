@@ -1,4 +1,5 @@
 from flask import request
+from flask_login.utils import login_required
 from flask_restful import Resource
 from sqlalchemy.exc import IntegrityError
 from src.models.genres import Genre
@@ -6,6 +7,7 @@ from src.tools.logging import loging
 
 
 class GenresList(Resource):
+    @login_required
     def post(self):
         """
         ---
@@ -46,7 +48,7 @@ class GenresList(Resource):
         except IntegrityError as exc:
             loging.exept(f"ERROR: bad arguments in request")
             Genre.rollback()
-            genres = {"Some errors": str(exc)}
+            genres = {"Bad args ERROR. Explanation": str(exc)}
 
         return genres, 200
 

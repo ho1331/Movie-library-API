@@ -1,7 +1,7 @@
+"""User model"""
 from datetime import datetime
 
 from flask_login import UserMixin
-from sqlalchemy.exc import IntegrityError
 from src.app import db, login
 from src.models.base import BaseModel
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -41,32 +41,36 @@ class User(db.Model, BaseModel, UserMixin):
         """
         create user
         """
-        result: dict = {}
-        try:
-            user = User(**data)
-            result = {
-                "name": user.name,
-                "nick_name": user.nick_name,
-                "email": user.email,
-                "password": user.set_password(user.pswhash),
-                "is_admin": user.is_admin,
-            }
-            user.save()
-        except IntegrityError as exc:
-            User.rollback()
-            result = {"Some errors": str(exc)}
+        user = User(**data)
+        result = {
+            "name": user.name,
+            "nick_name": user.nick_name,
+            "email": user.email,
+            "password": user.set_password(user.pswhash),
+            "is_admin": user.is_admin,
+        }
+        user.save()
 
         return result
 
     def set_password(self, password):
+        """
+        set hash password
+        """
         self.pswhash = generate_password_hash(password, method="sha256")
         return self.pswhash
 
     def check_password(self, password):
+        """
+        check password
+        """
         return check_password_hash(self.pswhash, password)
 
     # get users with id
     @staticmethod
     @login.user_loader
     def load_user(id):
+        """
+        add user to session place
+        """
         return User.query.get(int(id))

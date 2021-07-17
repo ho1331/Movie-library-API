@@ -114,7 +114,7 @@ class UsersList(Resource):
         except IntegrityError as exc:
             loging.exept(f"ERROR: bad arguments in request")
             User.rollback()
-            user = {"Some errors": str(exc)}
+            user = {"Bad args ERROR. Explanation": str(exc)}
 
         return user, 200
 

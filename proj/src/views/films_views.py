@@ -1,7 +1,7 @@
 from flask import request
 from flask_login import current_user, login_required
 from flask_restful import Resource
-from sqlalchemy.exc import IntegrityError
+from sqlalchemy.exc import DataError, IntegrityError
 from src.app import db
 from src.models.directors import Director
 from src.models.films import Film
@@ -86,10 +86,10 @@ class FilmsList(Resource):
         try:
             film = Film.create(request_json)
             loging.debug(request_json, "SUCCESS: Created film with parametrs")
-        except IntegrityError as exc:
+        except (IntegrityError, DataError, TypeError, AssertionError) as exc:
             loging.exept(f"ERROR: bad arguments in request")
             Film.rollback()
-            film = {"Some errors": str(exc)}
+            film = {"Bad args ERROR. Explanation": str(exc)}
 
         return film, 200
 
@@ -277,34 +277,26 @@ class FilmsItem(Resource):
     @login_required
     def patch(self, id):
         request_json = request.get_json(silent=True)
-        director = request_json.pop("director", None)
-        request_genre = request_json.pop("genres", None)
+        # director = request_json.pop("director", None)
+        # request_genre = request_json.pop("genres", None)
         film = db.session.query(Film).get(id)
+        if not film:
+            return {"ERROR. NOT FOUND film_id": id}, 400
+
         # check update (only films created user or admin)
         if current_user.id == film.user_id or current_user.is_admin == True:
-            Film.query.filter_by(id=id).update(request_json)
-            # relation update director
-            if director:
-                Film.query.filter_by(id=id).update(
-                    {
-                        "director_id": Film.get_or_crete(
-                            Director, name=director[0], sername=director[1]
-                        ).id
-                    }
-                )
-            # relation update genre
-            if request_genre:
-                film.genres = []
-                for genre in request_genre:
-                    # check if Genre is already exist
-                    new_genre = Film.get_or_crete(Genre, genre=genre)
-                    film.genres.append(new_genre)
+            try:
+                Film.patch(id, film, request_json)
+            except (IntegrityError, DataError, TypeError, AssertionError) as exc:
+                loging.exept(f"ERROR: bad arguments in request")
+                Film.rollback()
+                return {"Bad args ERROR. Explanation": str(exc)}
 
             db.session.commit()
             loging.info(id, "SUCCESS. Updated film with id")
-            return f"Success. Film with id={id} was updated", 200
+            return {"Success": f"Film with id={id} was updated"}, 200
         loging.debug(id, "FAIL. Not enough permissions to access. BAD user_id")
-        return f"Not enough permissions to access", 200
+        return {"permissions ERROR": "Not enough permissions to access"}, 200
 
     @login_required
     def delete(self, id):
@@ -323,14 +315,21 @@ class FilmsItem(Resource):
             "404":
                 description: "Film not found"
         """
+
         film = db.session.query(Film).get(id)
+        if not film:
+            return {"ERROR. NOT FOUND film_id": id}, 400
         if current_user.id == film.user_id or current_user.is_admin == True:
-            Film.query.filter(Film.id == id).delete()
-            Film.commit()
-            loging.info(id, "SUCCESS. Deleted film with id")
-            return f"Film with id {id} was deleted.", 200
+            try:
+                Film.delete(id)
+                loging.info(id, "SUCCESS. Deleted film with id")
+            except (IntegrityError, DataError, TypeError, AssertionError) as exc:
+                loging.exept(f"ERROR: bad arguments in request")
+                Film.rollback()
+                return {"Bad args ERROR. Explanation": str(exc)}, 200
+            return {"Success": f"Film with id {id} was deleted."}, 200
         loging.debug(
             f"{film.user_id} != {current_user.id}",
             "FAIL. Not enough permissions to access (explaine: film.user_id==user.id",
         )
-        return f"Not enough permissions to access", 200
+        return {"permissions ERROR": "Not enough permissions to access"}, 200

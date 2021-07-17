@@ -1,4 +1,4 @@
-from sqlalchemy.exc import IntegrityError
+"""Ref table by film-genre model"""
 from src.app import db
 from src.models.base import BaseModel
 

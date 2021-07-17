@@ -1,4 +1,4 @@
-from sqlalchemy.exc import IntegrityError
+"""Genere model"""
 from src.app import db
 from src.models.base import BaseModel
 
@@ -22,12 +22,9 @@ class Genre(db.Model, BaseModel):
         create genre
         """
         result: dict = {}
-        try:
-            genres = Genre(genre=genre)
-            result = {"genre": genres.genre}
-            genres.save()
-        except IntegrityError as exc:
-            Genre.rollback()
-            result = {"Some errors": str(exc)}
+        genres = Genre(genre=genre)
+        result = {"genre": genres.genre}
+        genres.save()
+        Genre.rollback()
 
         return result

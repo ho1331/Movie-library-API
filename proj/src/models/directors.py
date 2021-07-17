@@ -1,4 +1,4 @@
-from sqlalchemy.exc import IntegrityError
+"""Director model"""
 from src.app import db
 from src.models.base import BaseModel
 
@@ -19,20 +19,24 @@ class Director(db.Model, BaseModel):
         self.sername = sername
 
     @staticmethod
-    def create(dirname: str, sername: str) -> dict:
+    def create(data: dict) -> dict:
         """
         create director
         """
         result: dict = {}
-        try:
-            director = Director(name=dirname, sername=sername)
-            result = {
-                "name": director.name,
-                "sername": director.sername,
-            }
-            director.save()
-        except IntegrityError as exc:
-            Director.rollback()
-            result = {"Some errors": str(exc)}
-
+        director = Director(**data)
+        result = {
+            "name": director.name,
+            "sername": director.sername,
+        }
+        director.save()
+        Director.rollback()
         return result
+
+    @staticmethod
+    def delete(id: int):
+        """
+        delete director by id
+        """
+        Director.query.filter(Director.id == id).delete()
+        Director.commit()
