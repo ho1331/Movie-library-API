@@ -1052,3 +1052,38 @@ DETAIL:  Failing row contains (6, Pddkdoka, 2017-03-18, 34, 41111111111d111111!!
 2021-07-17 17:45:48,041:DEBUG:src.tools.logging - FAIL. Not enough permissions to access (explaine: film.user_id==user.id : 15 != 63
 2021-07-17 21:32:41,544:DEBUG:src.tools.logging - SUCCESS: Created film with parametrs : {'title': 'GHJ', 'release': '2017-3-18', 'description': 'afr оaid in all time', 'rating': 6.1, 'poster': 'ук75ded2hj2kdgfflrpl0ffhddльп'}
 2021-07-17 21:32:57,931:DEBUG:src.tools.logging - FAIL. Not enough permissions to access (explaine: film.user_id==user.id : 2 != 63
+2021-07-18 13:59:47,701:DEBUG:src.tools.logging - SUCCESS: Created user with parametrs : {'name': 'Moko', 'nick_name': 'ввMvdtokro13', 'email': '3', 'password': '3', 'is_admin': True}
+2021-07-18 20:56:06,435:DEBUG:src.tools.logging - SUCCESS: Created user with parametrs : {'name': 'Moko', 'nick_name': 'ввMvdtokro13', 'email': '3', 'password': '3', 'is_admin': True}
+2021-07-18 21:53:53,319:INFO:src.tools.logging - SUCCESS: Login with nick_name : ввMvdtokro13
+2021-07-18 21:59:48,458:INFO:src.tools.logging - SUCCESS: Login with nick_name : ввMvdtokro13
+2021-07-18 22:09:52,109:INFO:src.tools.logging - SUCCESS: Login with nick_name : ввMvdtokro13
+2021-07-18 22:17:50,657:INFO:src.tools.logging - SUCCESS: Login with nick_name : ввMvdtokro13
+2021-07-18 22:22:15,187:INFO:src.tools.logging - SUCCESS: Login with nick_name : ввMvdtokro13
+2021-07-18 22:29:15,195:INFO:src.tools.logging - SUCCESS: Login with nick_name : ввMvdtokro13
+2021-07-18 22:30:48,419:INFO:src.tools.logging - SUCCESS: Login with nick_name : ввMvdtokro13
+2021-07-18 22:30:51,201:INFO:src.tools.logging - SUCCESS: Login with nick_name : ввMvdtokro13
+2021-07-18 22:30:52,730:INFO:src.tools.logging - SUCCESS: Login with nick_name : ввMvdtokro13
+2021-07-18 22:31:28,052:INFO:src.tools.logging - SUCCESS: Login with nick_name : ввMvdtokro13
+2021-07-18 22:31:43,344:INFO:src.tools.logging - SUCCESS: Login with nick_name : ввMvdtokro13
+2021-07-18 22:32:34,127:INFO:src.tools.logging - SUCCESS: Login with nick_name : ввMvdtokro13
+2021-07-18 22:32:53,566:INFO:src.tools.logging - SUCCESS: Login with nick_name : ввMvdtokro13
+2021-07-18 22:33:29,082:INFO:src.tools.logging - SUCCESS: Login with nick_name : ввMvdtokro13
+2021-07-18 22:33:32,001:INFO:src.tools.logging - SUCCESS: Login with nick_name : ввMvdtokro13
+2021-07-18 22:33:45,150:INFO:src.tools.logging - SUCCESS: Login with nick_name : ввMvdtokro13
+2021-07-18 22:36:02,292:INFO:src.tools.logging - SUCCESS: Login with nick_name : ввMvdtokro13
+2021-07-18 22:38:45,253:INFO:src.tools.logging - SUCCESS: Login with nick_name : ввMvdtokro13
+2021-07-18 22:43:47,268:INFO:src.tools.logging - SUCCESS: Login with nick_name : ввMvdtokro13
+2021-07-18 22:44:26,645:INFO:src.tools.logging - SUCCESS: Login with nick_name : ввMvdtokro13
+2021-07-18 22:46:23,420:INFO:src.tools.logging - SUCCESS: Login with nick_name : ввMvdtokro13
+2021-07-18 22:46:44,959:INFO:src.tools.logging - SUCCESS: Login with nick_name : ввMvdtokro13
+2021-07-18 22:47:04,039:INFO:src.tools.logging - SUCCESS: Login with nick_name : ввMvdtokro13
+2021-07-18 22:47:46,954:DEBUG:src.tools.logging - FAIL: Invalid email : eee3
+2021-07-18 23:01:01,091:DEBUG:src.tools.logging - FAIL: Invalid email : eee3
+2021-07-18 23:03:29,583:DEBUG:src.tools.logging - FAIL: Invalid email : eee3
+2021-07-18 23:03:42,056:DEBUG:src.tools.logging - FAIL: Invalid email : eee3
+2021-07-18 23:04:28,154:DEBUG:src.tools.logging - FAIL: Invalid email : eee3
+2021-07-18 23:04:46,139:DEBUG:src.tools.logging - FAIL: Invalid email : eee3
+2021-07-18 23:16:38,563:DEBUG:src.tools.logging - FAIL: Invalid email : eee3
+2021-07-18 23:16:54,899:INFO:src.tools.logging - SUCCESS: Login with nick_name : ввMvdtokro13
+2021-07-18 23:19:00,968:INFO:src.tools.logging - SUCCESS: Login with nick_name : ввMvdtokro13
+2021-07-18 23:26:32,534:INFO:src.tools.logging - SUCCESS: Login with nick_name : ввMvdtokro13

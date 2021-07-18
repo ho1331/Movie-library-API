@@ -30,7 +30,6 @@ class Director(db.Model, BaseModel):
             "sername": director.sername,
         }
         director.save()
-        Director.rollback()
         return result
 
     @staticmethod
