@@ -1050,3 +1050,5 @@ DETAIL:  Failing row contains (6, Pddkdoka, 2017-03-18, 34, 41111111111d111111!!
 2021-07-17 17:45:24,169:INFO:src.tools.logging - SUCCESS. Deleted film with id : 9
 2021-07-17 17:45:41,276:INFO:src.tools.logging - SUCCESS: Login with nick_name : ввMdtkokro13
 2021-07-17 17:45:48,041:DEBUG:src.tools.logging - FAIL. Not enough permissions to access (explaine: film.user_id==user.id : 15 != 63
+2021-07-17 21:32:41,544:DEBUG:src.tools.logging - SUCCESS: Created film with parametrs : {'title': 'GHJ', 'release': '2017-3-18', 'description': 'afr оaid in all time', 'rating': 6.1, 'poster': 'ук75ded2hj2kdgfflrpl0ffhddльп'}
+2021-07-17 21:32:57,931:DEBUG:src.tools.logging - FAIL. Not enough permissions to access (explaine: film.user_id==user.id : 2 != 63

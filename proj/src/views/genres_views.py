@@ -50,7 +50,7 @@ class GenresList(Resource):
             Genre.rollback()
             genres = {"Bad args ERROR. Explanation": str(exc)}
 
-        return genres, 200
+        return genres, 201
 
     def get(self):
         """

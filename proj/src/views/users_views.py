@@ -116,7 +116,7 @@ class UsersList(Resource):
             User.rollback()
             user = {"Bad args ERROR. Explanation": str(exc)}
 
-        return user, 200
+        return user, 201
 
     def get(self):
         """

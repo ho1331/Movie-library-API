@@ -16,10 +16,12 @@ def after_create():
     count = 0
     while count <= 50:
         User.create(
-            username=faker.first_name(),
-            usernick=f"{faker.last_name_nonbinary()}{faker.suffix()}{faker.prefix()}",
-            useremail=faker.email(),
-            upass=faker.password(),
+            {
+                "name": faker.first_name(),
+                "nick_name": f"{faker.last_name_nonbinary()}{faker.suffix()}{faker.prefix()}",
+                "email": faker.email(),
+                "password": faker.password(),
+            }
         )
         count += 1
 
@@ -31,10 +33,7 @@ def after_create():
 
     count = 0
     while count <= 30:
-        Director.create(
-            dirname=faker.first_name(),
-            sername=faker.last_name(),
-        )
+        Director.create({"name": faker.first_name(), "sername": faker.last_name()})
         count += 1
 
     count_dierctors = Director.query.order_by(Director.id.desc()).first()
@@ -42,19 +41,22 @@ def after_create():
 
     count = 0
     while count <= 150:
-        Film.create(
-            {
-                "title": faker.currency_name(),
-                "release": faker.date(),
-                "director_id": randint(1, int(count_dierctors.id)),
-                "description": faker.paragraph(
+        try:
+            film = Film(
+                title=faker.currency_name(),
+                release=faker.date(),
+                director_id=randint(1, int(count_dierctors.id)),
+                description=faker.paragraph(
                     nb_sentences=5, variable_nb_sentences=False
                 ),
-                "rating": round(uniform(1, 10), 2),
-                "poster": faker.image_url(),
-                "user_id": randint(1, int(count_users.id)),
-            }
-        )
+                rating=round(uniform(1, 10), 2),
+                poster=faker.image_url(),
+                user_id=randint(1, int(count_users.id)),
+            )
+        except IntegrityError:
+            film.rollback()
+            count -= 1
+        film.save()
         count += 1
 
     count_films = Film.query.order_by(Film.id.desc()).first()

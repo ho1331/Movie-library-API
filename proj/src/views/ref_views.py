@@ -17,7 +17,7 @@ class RefList(Resource):
             loging.exept(f"ERROR: bad arguments in request")
             Ref.rollback()
             ref = {"Bad args ERROR. Explanation": str(exc)}
-        return ref, 200
+        return ref, 201
 
     def get(self):
         """

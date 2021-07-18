@@ -89,9 +89,9 @@ class FilmsList(Resource):
         except (IntegrityError, DataError, TypeError, AssertionError) as exc:
             loging.exept(f"ERROR: bad arguments in request")
             Film.rollback()
-            film = {"Bad args ERROR. Explanation": str(exc)}
+            film = {"Bad args ERROR. Explanation": str(exc)}, 400
 
-        return film, 200
+        return film, 201
 
     def get(self):
         """
@@ -270,7 +270,7 @@ class FilmsListViews(Resource):
                 # result.append(releases)
         if result:
             major_query = set(result[0]).intersection(*result[1:])
-        return major_query if result else all
+        return major_query if result else all, 200
 
 
 class FilmsItem(Resource):
@@ -281,7 +281,7 @@ class FilmsItem(Resource):
         # request_genre = request_json.pop("genres", None)
         film = db.session.query(Film).get(id)
         if not film:
-            return {"ERROR. NOT FOUND film_id": id}, 400
+            return {"ERROR. NOT FOUND film_id": id}, 404
 
         # check update (only films created user or admin)
         if current_user.id == film.user_id or current_user.is_admin == True:
@@ -290,13 +290,13 @@ class FilmsItem(Resource):
             except (IntegrityError, DataError, TypeError, AssertionError) as exc:
                 loging.exept(f"ERROR: bad arguments in request")
                 Film.rollback()
-                return {"Bad args ERROR. Explanation": str(exc)}
+                return {"Bad args ERROR. Explanation": str(exc)}, 400
 
             db.session.commit()
             loging.info(id, "SUCCESS. Updated film with id")
-            return {"Success": f"Film with id={id} was updated"}, 200
+            return {"Success": f"Film with id={id} was updated"}, 201
         loging.debug(id, "FAIL. Not enough permissions to access. BAD user_id")
-        return {"permissions ERROR": "Not enough permissions to access"}, 200
+        return {"permissions ERROR": "Not enough permissions to access"}, 403
 
     @login_required
     def delete(self, id):
@@ -318,7 +318,7 @@ class FilmsItem(Resource):
 
         film = db.session.query(Film).get(id)
         if not film:
-            return {"ERROR. NOT FOUND film_id": id}, 400
+            return {"ERROR. NOT FOUND film_id": id}, 404
         if current_user.id == film.user_id or current_user.is_admin == True:
             try:
                 Film.delete(id)
@@ -326,10 +326,10 @@ class FilmsItem(Resource):
             except (IntegrityError, DataError, TypeError, AssertionError) as exc:
                 loging.exept(f"ERROR: bad arguments in request")
                 Film.rollback()
-                return {"Bad args ERROR. Explanation": str(exc)}, 200
+                return {"Bad args ERROR. Explanation": str(exc)}, 400
             return {"Success": f"Film with id {id} was deleted."}, 200
         loging.debug(
             f"{film.user_id} != {current_user.id}",
             "FAIL. Not enough permissions to access (explaine: film.user_id==user.id",
         )
-        return {"permissions ERROR": "Not enough permissions to access"}, 200
+        return {"permissions ERROR": "Not enough permissions to access"}, 403

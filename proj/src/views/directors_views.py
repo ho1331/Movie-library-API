@@ -54,7 +54,7 @@ class DirectorsList(Resource):
             Director.rollback()
             director = {"Bad args ERROR. Explanation": str(exc)}
 
-        return director, 200
+        return director, 201
 
     def get(self):
         """
@@ -112,9 +112,9 @@ class DirectorsItem(Resource):
                 loging.info(id, "SUCCESS. Deleted director with id")
             except SQLAlchemyError as exp:
                 return {"DELETE Error": f"{id} not FOUND, {exp}"}
-            return {"Success": f"Director with id {id} is deleted."}, 204
+            return {"Success": f"Director with id {id} is deleted."}, 404
         loging.debug(
             "only admin",
             "FAIL. Not enough permissions to access",
         )
-        return {"permissions ERROR": "Not enough permissions to access"}, 200
+        return {"permissions ERROR": "Not enough permissions to access"}, 403
