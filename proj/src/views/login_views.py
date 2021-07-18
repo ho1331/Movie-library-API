@@ -16,11 +16,15 @@ class LoginApi(Resource):
         authorized = user.check_password(body.get("password"))
         if not authorized:
             loging.debug(body.get("password"), "FAIL: Invalid password")
-            return {"error": "Invalid password"}, 400
+            return (
+                {"error": "Invalid password"},
+                400,
+                {"Content-Type": "application/json"},
+            )
 
         login_user(user, remember=True)
         loging.info(user.nick_name, "SUCCESS: Login with nick_name")
-        return redirect("/api/done/"), 200
+        return redirect("/api/done/")
 
     def get(self):
         if current_user.is_authenticated:

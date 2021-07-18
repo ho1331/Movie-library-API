@@ -49,6 +49,7 @@ class Users(Resource):
             "email": user.email,
             "password": user.pswhash,
             "date_created": str(user.created),
+            "is_admin": user.is_admin,
         }
         return serialized_data, 200
 

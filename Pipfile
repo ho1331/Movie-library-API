@@ -1,0 +1,25 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+black = "==21.6b0"
+pylint = "==2.8.3"
+
+[dev-packages]
+flask-migrate = "==3.0.1"
+flask-sqlalchemy = "==2.5.1"
+psycopg2 = "==2.9.1"
+python-dotenv = "==0.18.0"
+flask-restful = "==0.3.9"
+gunicorn = "==20.1.0"
+flask-wtf = "==0.15."
+flasgger = "==0.9.5"
+flask-login = "==0.4.1"
+faker = "==6.1.1"
+pytest = "==6.2.4"
+flask = "==1.1.4"
+
+[requires]
+python_version = "3.8"

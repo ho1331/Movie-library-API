@@ -184,7 +184,7 @@ class FilmsListViews(Resource):
                 description: user nick
 
         """
-        films = FilmsListViews.query(request.args)
+        films = FilmsListViews.querys(request.args)
         serialized_data = [
             {
                 "id": film.id,
@@ -204,7 +204,7 @@ class FilmsListViews(Resource):
         return serialized_data, 200
 
     @staticmethod
-    def query(data: dict) -> dict:
+    def querys(data: dict) -> dict:
         params = data
         per_page = 10
         paginate = params.get("per_page")
@@ -270,7 +270,7 @@ class FilmsListViews(Resource):
                 # result.append(releases)
         if result:
             major_query = set(result[0]).intersection(*result[1:])
-        return major_query if result else all, 200
+        return major_query if result else all
 
 
 class FilmsItem(Resource):
