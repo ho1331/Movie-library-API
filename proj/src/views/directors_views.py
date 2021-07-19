@@ -11,6 +11,8 @@ class DirectorsList(Resource):
     def post(self):
         """
         ---
+        tags:
+         - name: Directors
         post:
           produces: application/json
           parameters:
@@ -20,7 +22,7 @@ class DirectorsList(Resource):
              schema:
                type: object
                properties:
-                dirname:
+                name:
                     type: string
                     description: The name of director
                 sername:
@@ -59,6 +61,8 @@ class DirectorsList(Resource):
     def get(self):
         """
         ---
+        tags:
+         - name: Directors
         responses:
           200:
             description: List of directors
@@ -93,6 +97,8 @@ class DirectorsItem(Resource):
     def delete(self, id):
         """
         ---
+        tags:
+         - name: Directors
         delete:
           tags : directors
           parameters:
