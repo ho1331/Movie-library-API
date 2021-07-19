@@ -210,67 +210,31 @@ class FilmsListViews(Resource):
         paginate = params.get("per_page")
         if paginate:
             per_page = paginate
-        result = []
-        all = Film.query.paginate(per_page=int(per_page), error_out=False).items
+        all = db.session.query(Film)
         for param in params:
             if param == "part_title":
-                titles = (
-                    Film.query.filter(Film.title.like(f"%{params.get(param).lower()}%"))
-                    .paginate(per_page=int(per_page), error_out=False)
-                    .items
-                )
-                result.append(titles)
+                all = all.filter(Film.title.like(f"%{params.get(param).lower()}%"))
             if param == "rating":
-                ratings = Film.query.filter_by(rating=params.get(param))
-                result.append(ratings)
+                all = all.filter_by(rating=params.get(param))
             if param == "director-id":
-                directors = Film.query.filter_by(director_id=params.get(param))
-                result.append(directors)
+                all = all.filter_by(director_id=params.get(param))
             if param == "period":
                 period = request.args.getlist("period")
-                periods = (
-                    Film.query.filter(Film.release.between(period[0], period[1]))
-                    .paginate(per_page=int(per_page), error_out=False)
-                    .items
-                )
-                result.append(periods)
+                all = all.filter(Film.release.between(period[0], period[1]))
             if param == "genres":
-                genres = (
-                    Film.query.filter(
-                        Film.genres.any(Genre.genre.in_([params.get(param)]))
-                    )
-                    .paginate(per_page=int(per_page), error_out=False)
-                    .items
-                )
-                result.append(genres)
+                all = all.filter(Film.genres.any(Genre.genre.in_([params.get(param)])))
             # sort
             if param == "sort-by-rating":
-                all = (
-                    {
-                        params.get(param)
-                        == "asc": Film.query.order_by(Film.rating.asc()),
-                        params.get(param)
-                        == "desc": Film.query.order_by(Film.rating.desc()),
-                    }[True]
-                    .paginate(per_page=int(per_page), error_out=False)
-                    .items
-                )
-                # result.append(ratings)
+                all = {
+                    params.get(param) == "asc": all.order_by(Film.rating.asc()),
+                    params.get(param) == "desc": all.order_by(Film.rating.desc()),
+                }[True]
             if param == "sort-by-release":
-                all = (
-                    {
-                        params.get(param)
-                        == "asc": Film.query.order_by(Film.release.asc()),
-                        params.get(param)
-                        == "desc": Film.query.order_by(Film.release.desc()),
-                    }[True]
-                    .paginate(per_page=int(per_page), error_out=False)
-                    .items
-                )
-                # result.append(releases)
-        if result:
-            major_query = set(result[0]).intersection(*result[1:])
-        return major_query if result else all
+                all = {
+                    params.get(param) == "asc": all.order_by(Film.release.asc()),
+                    params.get(param) == "desc": all.order_by(Film.release.desc()),
+                }[True]
+        return all.paginate(per_page=int(per_page), error_out=False).items
 
 
 class FilmsItem(Resource):
