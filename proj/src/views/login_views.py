@@ -8,6 +8,34 @@ from src.tools.logging import loging
 
 class LoginApi(Resource):
     def post(self):
+        """
+        ---
+        tags:
+         - name: Login
+        post:
+          produces: application/json
+          parameters:
+           - in: body
+             name: login form
+             description: Login users
+             schema:
+               type: object
+               properties:
+                login:
+                    type: string
+                    description: user's email
+                password:
+                    type: string
+                    description: user's password
+
+
+        responses:
+          200:
+            description:  Success
+          400:
+            description:  Invalid email/password
+        """
+
         body = request.get_json()
         user = User.query.filter_by(email=body.get("login")).first()
         if not user:
@@ -24,7 +52,11 @@ class LoginApi(Resource):
 
         login_user(user, remember=True)
         loging.info(user.nick_name, "SUCCESS: Login with nick_name")
-        return redirect("/api/done/")
+        return (
+            {"Welcome": f"User {current_user.nick_name} logged in"},
+            200,
+            {"Content-Type": "application/json"},
+        )
 
     def get(self):
         if current_user.is_authenticated:
@@ -37,6 +69,19 @@ class LoginApi(Resource):
 class LogoutApi(Resource):
     @login_required
     def get(self):
+        """
+        ---
+        tags:
+         - name: Login
+        responses:
+          200:
+            description:  Success
+        """
+        out = {"Goodbye": f"User {current_user.nick_name} logged out"}
         loging.info(current_user.nick_name, "User was logout with nick_name")
         logout_user()
-        return redirect("/api/done/"), 200
+        return (
+            out,
+            200,
+            {"Content-Type": "application/json"},
+        )
