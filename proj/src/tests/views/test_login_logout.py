@@ -1,23 +1,37 @@
 import pytest
-from src.app import create_app
+from faker import Factory
+from src.models.users import User
 
+faker = Factory.create()
 
-@pytest.fixture(scope="module")
-def test_client():
-    flask_app = create_app()
-
-    # Create a test client using the Flask application configured for testing
-    with flask_app.test_client() as testing_client:
-        # Establish an application context
-        with flask_app.app_context():
-            yield testing_client  # this is where the testing happens!
+unauthorizate_user, authorizate_user = {
+    "name": faker.first_name(),
+    "nick_name": f"{faker.last_name_nonbinary()}{faker.suffix()}{faker.prefix()}",
+    "email": faker.email(),
+    "password": faker.password(),
+}, {
+    "name": faker.first_name(),
+    "nick_name": f"{faker.last_name_nonbinary()}{faker.suffix()}{faker.prefix()}",
+    "email": faker.email(),
+    "password": faker.password(),
+}
 
 
 def test_login_logout(test_client):
-    response = test_client.post(
-        "/login/", data=dict(login="3", password="3"), follow_redirects=True
+    current_user = User.create(authorizate_user)
+    response1 = test_client.post(
+        "/api/login/",
+        json=dict(
+            login=unauthorizate_user["email"], password=unauthorizate_user["password"]
+        ),
     )
-    assert response.status_code == 404
-
-    response = test_client.get("/login/")
-    assert response.status_code == 404
+    response2 = test_client.post(
+        "/api/login/",
+        json=dict(
+            login=current_user.get("email"), password=authorizate_user["password"]
+        ),
+    )
+    response3 = test_client.get("/api/logout/")
+    assert response1.status_code == 400
+    assert response2.status_code == 200
+    assert response3.status_code == 200
