@@ -16,15 +16,17 @@ class RefList(Resource):
         except IntegrityError as exc:
             loging.exept(f"ERROR: bad arguments in request")
             Ref.rollback()
-            ref = {"Bad args ERROR. Explanation": str(exc)}
+            return {"Bad args ERROR. Explanation": str(exc)}, 400
         return ref, 201
 
     def get(self):
         """
         ---
+        tags:
+         - name: Reference list (Film-Genre)
         responses:
           200:
-            description: Ref list
+            description: Ref list. (Ref list created automaticaly by creating film)
             schema:
               id: Ref
               properties:

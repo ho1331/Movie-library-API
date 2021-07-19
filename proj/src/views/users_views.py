@@ -9,6 +9,8 @@ class Users(Resource):
     def get(self, id: int):
         """
         ---
+        tags:
+         - name: Users
         parameters:
           - in: path
             name: id
@@ -39,6 +41,9 @@ class Users(Resource):
                     type: string
                     format: date-time
                     description: The period of user registration
+                is_admin:
+                    type: boolean
+                    description: Show user's privilege
 
         """
         user = User.query.filter_by(id=id).first_or_404()
@@ -58,6 +63,8 @@ class UsersList(Resource):
     def post(self):
         """
         ---
+        tags:
+         - name: Users
         post:
           produces: application/json
           parameters:
@@ -67,19 +74,22 @@ class UsersList(Resource):
              schema:
                type: object
                properties:
-                username:
-                 type: string
-                 description: User's name
-                usernick:
-                 type: string
-                 description: User's nick name
-                useremail:
-                 type: string
-                 description: User's email
-                upass:
-                 type: string
-                 description: User's password
-
+                name:
+                    type: string
+                    description: User's name
+                nick_name:
+                    type: string
+                    description: User's nick name
+                email:
+                    type: string
+                    description: User's email
+                password:
+                    type: string
+                    description: User's password
+                is_admin:
+                    type: boolean
+                    description: prev
+                    requared: false
         responses:
           200:
             description:  New User
@@ -98,10 +108,10 @@ class UsersList(Resource):
                 email:
                     type: string
                     description: The users email (login)
-                pswhash:
+                password:
                     type: string
                     description: The users hash password
-                created:
+                created_at:
                     type: string
                     format: date-time
                     description: The period of user registration
@@ -112,16 +122,17 @@ class UsersList(Resource):
         try:
             user = User.create(request_json)
             loging.debug(request_json, "SUCCESS: Created user with parametrs")
-        except IntegrityError as exc:
+        except (IntegrityError, AssertionError) as exc:
             loging.exept(f"ERROR: bad arguments in request")
             User.rollback()
-            user = {"Bad args ERROR. Explanation": str(exc)}
-
+            return {"Bad args ERROR. Explanation": str(exc)}, 400
         return user, 201
 
     def get(self):
         """
         ---
+        tags:
+         - name: Users
         responses:
           200:
             description: List of users
@@ -140,10 +151,10 @@ class UsersList(Resource):
                 email:
                     type: string
                     description: The users email (login)
-                pswhash:
+                password:
                     type: string
                     description: The users hash password
-                created:
+                created_at:
                     type: string
                     format: date-time
                     description: The period of user registration

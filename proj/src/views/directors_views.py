@@ -2,6 +2,7 @@ from flask import request
 from flask_login.utils import current_user, login_required
 from flask_restful import Resource
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
+from src.app import db
 from src.models.directors import Director
 from src.tools.logging import loging
 
@@ -39,7 +40,7 @@ class DirectorsList(Resource):
                 id:
                     type: integer
                     description: The director's id
-                dirname:
+                name:
                     type: string
                     description: The name of director
                 sername:
@@ -54,7 +55,7 @@ class DirectorsList(Resource):
         except IntegrityError as exc:
             loging.exept(f"ERROR: bad arguments in request")
             Director.rollback()
-            director = {"Bad args ERROR. Explanation": str(exc)}
+            return {"Bad args ERROR. Explanation": str(exc)}, 400
 
         return director, 201
 
@@ -100,7 +101,6 @@ class DirectorsItem(Resource):
         tags:
          - name: Directors
         delete:
-          tags : directors
           parameters:
             - in: path
               name: id
@@ -112,13 +112,18 @@ class DirectorsItem(Resource):
             "404":
                 description: "Director not found"
         """
+        director = db.session.query(Director).get(id)
+        if not director:
+            return {"ERROR. NOT FOUND film_id": id}, 404
         if current_user.is_admin == True:
             try:
                 Director.delete(id)
                 loging.info(id, "SUCCESS. Deleted director with id")
-            except SQLAlchemyError as exp:
-                return {"DELETE Error": f"{id} not FOUND, {exp}"}
-            return {"Success": f"Director with id {id} is deleted."}, 404
+            except (IntegrityError, TypeError) as exc:
+                loging.exept(f"ERROR: bad arguments in request")
+                Director.rollback()
+                return {"Bad args ERROR. Explanation": str(exc)}, 400
+            return {"Success": f"Director with id {id} is deleted."}, 200
         loging.debug(
             "only admin",
             "FAIL. Not enough permissions to access",

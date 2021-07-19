@@ -2,6 +2,7 @@
 from datetime import datetime
 
 from flask_login import UserMixin
+from sqlalchemy.orm import validates
 from src.app import db, login
 from src.models.base import BaseModel
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -21,6 +22,16 @@ class User(db.Model, BaseModel, UserMixin):
     created = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
     is_admin = db.Column(db.Boolean, default=False)
     films = db.relationship("Film", backref="users", lazy=True)
+
+    @validates("email")
+    def validate_rating(self, key, field):
+        """
+        Check email input
+        """
+        if "@" in field:
+            return field
+        else:
+            raise AssertionError("Bad field : 'email'")
 
     def __init__(
         self,

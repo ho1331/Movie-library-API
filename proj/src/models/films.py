@@ -76,7 +76,6 @@ class Film(db.Model, BaseModel):
             "user": current_user._get_current_object().nick_name,
             "genre": [genres.genre for genres in film.genres],
         }
-        Film.rollback()
         return result
 
     @staticmethod

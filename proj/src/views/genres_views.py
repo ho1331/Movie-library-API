@@ -11,6 +11,8 @@ class GenresList(Resource):
     def post(self):
         """
         ---
+        tags:
+         - name: Genres
         post:
           produces: application/json
           parameters:
@@ -48,13 +50,15 @@ class GenresList(Resource):
         except IntegrityError as exc:
             loging.exept(f"ERROR: bad arguments in request")
             Genre.rollback()
-            genres = {"Bad args ERROR. Explanation": str(exc)}
+            return {"Bad args ERROR. Explanation": str(exc)}, 401
 
         return genres, 201
 
     def get(self):
         """
         ---
+        tags:
+         - name: Genres
         responses:
           200:
             description: List of genres
@@ -66,7 +70,7 @@ class GenresList(Resource):
                     description: The genre's id
                 genre:
                     type: string
-                    description: The name of the user
+                    description: The name of the genre
         """
         genres = Genre.query.all()
         serialized_data = [{"id": genre.id, "genre": genre.genre} for genre in genres]

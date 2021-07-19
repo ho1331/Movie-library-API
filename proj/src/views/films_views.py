@@ -3,7 +3,6 @@ from flask_login import current_user, login_required
 from flask_restful import Resource
 from sqlalchemy.exc import DataError, IntegrityError
 from src.app import db
-from src.models.directors import Director
 from src.models.films import Film
 from src.models.genres import Genre
 from src.tools.logging import loging
@@ -14,12 +13,14 @@ class FilmsList(Resource):
     def post(self):
         """
         ---
+        tags:
+         - name: Films
         post:
           produces: application/json
           parameters:
            - in: body
              name: add new film
-             description: add film to list by user
+             description: Views with id reference (for admin)
              schema:
                type: object
                properties:
@@ -30,9 +31,6 @@ class FilmsList(Resource):
                     type: string
                     format: date
                     description: The date of film's release
-                director_id:
-                    type: integer
-                    description: director id by film
                 description:
                     type: string
                     description: film's description
@@ -43,9 +41,17 @@ class FilmsList(Resource):
                 poster:
                     type: string
                     description: link to film's poster
-                user_id:
-                    type: integer
-                    description: user id by film
+                genre:
+                    type: array
+                    items:
+                      type: string
+                    minItems: 1
+                director(name,sername):
+                    type: array
+                    items:
+                      type: string
+                    minItems: 2
+                    maxItems: 2
 
         responses:
           200:
@@ -63,9 +69,6 @@ class FilmsList(Resource):
                     type: string
                     format: date
                     description: The date of film's release
-                director_id:
-                    type: integer
-                    description: director id by film
                 description:
                     type: string
                     description: film's description
@@ -76,9 +79,17 @@ class FilmsList(Resource):
                 poster:
                     type: string
                     description: link to film's poster
-                user_id:
-                    type: integer
-                    description: user id by film
+                genre:
+                    type: array
+                    items:
+                      type: string
+                director(name,sername):
+                    type: array
+                    items:
+                      type: string
+                user_nick_name:
+                    type: string
+                    description: user nick_name by film
 
         """
 
@@ -89,13 +100,15 @@ class FilmsList(Resource):
         except (IntegrityError, DataError, TypeError, AssertionError) as exc:
             loging.exept(f"ERROR: bad arguments in request")
             Film.rollback()
-            film = {"Bad args ERROR. Explanation": str(exc)}, 400
+            return {"Bad args ERROR. Explanation": str(exc)}, 400
 
         return film, 201
 
     def get(self):
         """
         ---
+        tags:
+         - name: Films
         responses:
           200:
             description: List of films
@@ -127,6 +140,11 @@ class FilmsList(Resource):
                 user_id:
                     type: integer
                     description: user id by film
+                genre:
+                    type: array
+                    items:
+                      type: integer
+
         """
         # films = Film.query.all()
         films = Film.query.all()
@@ -151,6 +169,60 @@ class FilmsListViews(Resource):
     def get(self):
         """
         ---
+        tags:
+         - name: Films
+        parameters:
+          - in: query
+            name: director-id
+            type: integer
+            required: false
+          - in: query
+            name: genres
+            required: false
+            type: array
+            items:
+                type: string
+            collectionFormat: multi
+            minItems: 1
+          - in: query
+            name: period
+            required: false
+            type: array
+            items:
+                type: string
+                format: date
+            collectionFormat: multi
+            minItems: 2
+            maxItems: 2
+          - in: query
+            name: part_title
+            description: partial search title of film
+            required: false
+          - in: query
+            name: sort-by-rating
+            description: sorting film by rating (asc/desc)
+            schema:
+                type: string
+                enum: [asc, desc]
+            required: false
+          - in: query
+            name: sort-by-release
+            description: sorting film by date of release (asc/desc)
+            schema:
+                type: string
+                enum: [asc, desc]
+            required: false
+          - in: query
+            name: page
+            type: integer
+            description: asc or desc
+            required: false
+          - in: query
+            name: per_page
+            type: integer
+            description: asc or desc
+            required: false
+
         responses:
           404:
             description: "Film not found"
@@ -266,8 +338,9 @@ class FilmsItem(Resource):
     def delete(self, id):
         """
         ---
+        tags:
+         - name: Films
         delete:
-          tags : films
           parameters:
             - in: path
               name: id
