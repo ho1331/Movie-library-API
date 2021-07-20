@@ -1,7 +1,6 @@
 from flask import redirect, request
 from flask_login import current_user, login_required, login_user, logout_user
 from flask_restful import Resource
-from sqlalchemy.exc import IntegrityError
 from src.models.users import User
 from src.tools.logging import loging
 
@@ -36,7 +35,7 @@ class LoginApi(Resource):
             description:  Invalid email/password
         """
 
-        body = request.get_json()
+        body = request.get_json(force=True)
         user = User.query.filter_by(email=body.get("login")).first()
         if not user:
             loging.debug(body.get("login"), "FAIL: Invalid email")
@@ -44,26 +43,17 @@ class LoginApi(Resource):
         authorized = user.check_password(body.get("password"))
         if not authorized:
             loging.debug(body.get("password"), "FAIL: Invalid password")
-            return (
-                {"error": "Invalid password"},
-                400,
-                {"Content-Type": "application/json"},
-            )
+            return {"error": "Invalid password"}, 400
 
         login_user(user, remember=True)
         loging.info(user.nick_name, "SUCCESS: Login with nick_name")
-        return (
-            {"Welcome": f"User {current_user.nick_name} logged in"},
-            200,
-            {"Content-Type": "application/json"},
-        )
+        return {"status": "success"}, 200
 
     def get(self):
         if current_user.is_authenticated:
-            return redirect("/api/done/")
+            return {"Info": "is_authenticated"}, 200
         # here will be sign(registration) form
-        form = {"login": "", "password": ""}
-        return form, 200
+        return {"login": "", "password": ""}, 200
 
 
 class LogoutApi(Resource):
@@ -77,11 +67,6 @@ class LogoutApi(Resource):
           200:
             description:  Success
         """
-        out = {"Goodbye": f"User {current_user.nick_name} logged out"}
         loging.info(current_user.nick_name, "User was logout with nick_name")
         logout_user()
-        return (
-            out,
-            200,
-            {"Content-Type": "application/json"},
-        )
+        return {"status": "success"}, 200

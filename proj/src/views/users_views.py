@@ -122,7 +122,7 @@ class UsersList(Resource):
         try:
             user = User.create(request_json)
             loging.debug(request_json, "SUCCESS: Created user with parametrs")
-        except (IntegrityError, AssertionError) as exc:
+        except (IntegrityError, TypeError, AssertionError) as exc:
             loging.exept(f"ERROR: bad arguments in request")
             User.rollback()
             return {"Bad args ERROR. Explanation": str(exc)}, 400
