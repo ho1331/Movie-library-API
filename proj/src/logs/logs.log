@@ -1,0 +1,3 @@
+2021-07-19 23:16:05,386:DEBUG:src.tools.logging - FAIL: Invalid email : 3
+2021-07-19 23:16:12,563:INFO:src.tools.logging - SUCCESS: Login with nick_name : string
+2021-07-19 23:33:08,301:INFO:src.tools.logging - SUCCESS. Deleted film with id : 37
