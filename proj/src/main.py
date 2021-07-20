@@ -7,7 +7,6 @@ from src.views.directors_views import DirectorsItem, DirectorsList
 from src.views.films_views import FilmsItem, FilmsList, FilmsListViews
 from src.views.genres_views import GenresList
 from src.views.login_views import LoginApi, LogoutApi
-from src.views.ref_views import RefList
 from src.views.users_views import Users, UsersList
 
 # API route
@@ -23,7 +22,3 @@ api.add_resource(FilmsListViews, "/api/films-views/")
 api.add_resource(FilmsItem, "/api/films-views/<int:id>")
 api.add_resource(LoginApi, "/api/login/")
 api.add_resource(LogoutApi, "/api/logout/")
-api.add_resource(RefList, "/api/genre-film/")
-
-# docs
-# docs.register(UsersList)

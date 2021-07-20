@@ -1,3 +1,4 @@
+"""module user views"""
 from flask import request
 from flask_restful import Resource
 from sqlalchemy.exc import IntegrityError
@@ -6,6 +7,10 @@ from src.tools.logging import loging
 
 
 class Users(Resource):
+    """
+    class Users
+    """
+
     def get(self, id: int):
         """
         ---
@@ -123,9 +128,9 @@ class UsersList(Resource):
             user = User.create(request_json)
             loging.debug(request_json, "SUCCESS: Created user with parametrs")
         except (IntegrityError, TypeError, AssertionError) as exc:
-            loging.exept(f"ERROR: bad arguments in request")
+            loging.exept("ERROR: bad arguments in request")
             User.rollback()
-            return {"Bad args ERROR. Explanation": str(exc)}, 400
+            return {"status": f"error: {str(exc)}"}, 400
         return user, 201
 
     def get(self):

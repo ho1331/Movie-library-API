@@ -1,5 +1,5 @@
 The test data uses the Faker module. 
-Therefore, there is a possibility of an errorЖ
+Therefore, there is a possibility of an error such as:
 
  sqlalchemy.exc.IntegrityError: (psycopg2.errors.UniqueViolation) duplicate key value violates unique constraint.
 

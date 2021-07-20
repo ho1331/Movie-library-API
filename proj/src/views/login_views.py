@@ -1,4 +1,5 @@
-from flask import redirect, request
+"""module loging"""
+from flask import request
 from flask_login import current_user, login_required, login_user, logout_user
 from flask_restful import Resource
 from src.models.users import User
@@ -6,6 +7,10 @@ from src.tools.logging import loging
 
 
 class LoginApi(Resource):
+    """
+    class LoginApi
+    """
+
     def post(self):
         """
         ---
@@ -39,11 +44,11 @@ class LoginApi(Resource):
         user = User.query.filter_by(email=body.get("login")).first()
         if not user:
             loging.debug(body.get("login"), "FAIL: Invalid email")
-            return {"error": "Invalid email"}, 400
+            return {"status": "Invalid email"}, 400
         authorized = user.check_password(body.get("password"))
         if not authorized:
             loging.debug(body.get("password"), "FAIL: Invalid password")
-            return {"error": "Invalid password"}, 400
+            return {"status": "Invalid password"}, 400
 
         login_user(user, remember=True)
         loging.info(user.nick_name, "SUCCESS: Login with nick_name")
@@ -51,7 +56,7 @@ class LoginApi(Resource):
 
     def get(self):
         if current_user.is_authenticated:
-            return {"Info": "is_authenticated"}, 200
+            return {"status": "is_authenticated"}, 200
         # here will be sign(registration) form
         return {"login": "", "password": ""}, 200
 

@@ -1,3 +1,4 @@
+"""genres views"""
 from flask import request
 from flask_login.utils import login_required
 from flask_restful import Resource
@@ -7,6 +8,10 @@ from src.tools.logging import loging
 
 
 class GenresList(Resource):
+    """
+    class GenresList
+    """
+
     @login_required
     def post(self):
         """
@@ -48,9 +53,9 @@ class GenresList(Resource):
             )
             loging.debug(request_json, "SUCCESS: Created genre with parametrs")
         except IntegrityError as exc:
-            loging.exept(f"ERROR: bad arguments in request")
+            loging.exept("ERROR: bad arguments in request")
             Genre.rollback()
-            return {"Bad args ERROR. Explanation": str(exc)}, 401
+            return {"status": f"error: {str(exc)}"}, 401
 
         return genres, 201
 

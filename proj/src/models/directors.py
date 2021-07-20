@@ -23,7 +23,6 @@ class Director(db.Model, BaseModel):
         """
         create director
         """
-        result: dict = {}
         director = Director(**data)
         result = {
             "name": director.name,
@@ -33,7 +32,7 @@ class Director(db.Model, BaseModel):
         return result
 
     @staticmethod
-    def delete(id: int):
+    def delete(id: int) -> None:
         """
         delete director by id
         """

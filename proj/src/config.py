@@ -1,7 +1,12 @@
+"""app conf"""
 from os import getenv
 
 
 class Config:
+    """
+    class Config
+    """
+
     # WEB
     DEBUG = True
     TESTING = True
@@ -16,4 +21,4 @@ class Config:
     )
 
     # DOC
-    SWAGGER = {"title": "Project documentation", "doc_dir": "./docs/"}
+    SWAGGER = {"title": "Movie-library API-documentation", "doc_dir": "./docs/"}

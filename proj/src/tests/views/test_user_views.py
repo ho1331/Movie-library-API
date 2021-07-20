@@ -1,5 +1,5 @@
 import pytest
-from src.tests.data_to_test import data_test_film_crete, data_to_test_user_create
+from src.tests.mark_parametrize import data_test_film_crete, data_to_test_user_create
 
 
 def test_user_list__get(test_client):

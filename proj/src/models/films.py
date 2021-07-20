@@ -1,8 +1,5 @@
 """Film model"""
-from operator import index
-
 from flask_login import current_user
-from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import validates
 from src.app import db
 from src.models.base import BaseModel
@@ -46,7 +43,6 @@ class Film(db.Model, BaseModel):
         """
         create film
         """
-        result: dict = {}
         # pop genres to exec
         genr = data.pop("genres")
         # pop director to exec

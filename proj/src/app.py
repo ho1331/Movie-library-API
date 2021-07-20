@@ -1,3 +1,4 @@
+"""basic app params"""
 from flask import Flask
 from flask_login import LoginManager
 from flask_migrate import Migrate
@@ -9,6 +10,9 @@ db = SQLAlchemy()
 
 
 def create_app():
+    """
+    create app params
+    """
     app = Flask(__name__)
     app.config.from_object(Config)
     db.init_app(app)
