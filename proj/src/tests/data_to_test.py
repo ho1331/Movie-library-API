@@ -13,9 +13,9 @@ unauthorizate_user, authorizate_user = {
     "email": faker.email(),
     "password": faker.password(),
 }, {
-    "name": faker.first_name(),
+    "name": f"{faker.prefix()}{faker.first_name()}",
     "nick_name": f"{faker.last_name_nonbinary()}{faker.suffix()}{faker.prefix()}",
-    "email": faker.email(),
+    "email": f"{faker.prefix()}{faker.email()}",
     "password": faker.password(),
 }
 
@@ -94,8 +94,37 @@ data_test_film_item_patch = [
     }
 ]
 
+data_test_director_create = [
+    {
+        "name": faker.name(),
+        "sername": faker.last_name(),
+    }
+]
 
-data_test_film_item_del = [randint(1,50) for i in range(3)]
+
+data_to_test_user_create = [
+    {
+        "name": faker.first_name(),
+        "nick_name": f"{faker.last_name_nonbinary()}{faker.suffix()}{faker.prefix()}",
+        "email": faker.email(),
+        "password": faker.password(),
+        "is_admin": False,
+    },
+    {
+        "name": faker.first_name(),
+        "nick_name": f"{faker.last_name_nonbinary()}{faker.suffix()}{faker.prefix()}",
+        "email": faker.email(),
+        "password": faker.password(),
+        "is_admin": True,
+    },
+]
+data_admin = {
+    "name": f"{faker.first_name()}{faker.suffix()}",
+    "nick_name": f"{faker.last_name_nonbinary()}{faker.suffix()}{faker.prefix()}",
+    "email": f"{faker.suffix()}{faker.email()}",
+    "password": faker.password(),
+    "is_admin": True,
+}
 
 
 def create_user():
@@ -104,4 +133,11 @@ def create_user():
         return User.create(authorizate_user)
 
 
+def create_admin():
+    """create mock current_admin"""
+    with api.app.app_context():
+        return User.create(data_admin)
+
+
 current_user = create_user()
+admin = create_admin()

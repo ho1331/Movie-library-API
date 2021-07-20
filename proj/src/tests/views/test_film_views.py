@@ -2,10 +2,13 @@ from random import randint
 
 import pytest
 from src.models.films import Film
-from src.tests.data_to_test import (authorizate_user, current_user,
-                                    data_test_film_crete,
-                                    data_test_film_item_del,
-                                    data_test_film_item_patch, data_test_query)
+from src.tests.data_to_test import (
+    authorizate_user,
+    current_user,
+    data_test_film_crete,
+    data_test_film_item_patch,
+    data_test_query,
+)
 
 
 @pytest.mark.parametrize(
