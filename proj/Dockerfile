@@ -9,6 +9,6 @@ RUN pip install -r requirements.txt
 
 # Run flask app
 EXPOSE 5000
-# 3 рабочих потока
+# 3 works streams
 CMD ["gunicorn", "-w", "3", "-b", ":5000", "-t", "360", "--reload", "src.main:app"] 
 

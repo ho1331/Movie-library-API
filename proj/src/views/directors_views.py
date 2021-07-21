@@ -1,13 +1,18 @@
+"""directors views"""
 from flask import request
 from flask_login.utils import current_user, login_required
 from flask_restful import Resource
-from sqlalchemy.exc import IntegrityError, SQLAlchemyError
+from sqlalchemy.exc import IntegrityError
 from src.app import db
 from src.models.directors import Director
 from src.tools.logging import loging
 
 
 class DirectorsList(Resource):
+    """
+    class DirectorsList
+    """
+
     @login_required
     def post(self):
         """
@@ -53,9 +58,9 @@ class DirectorsList(Resource):
             director = Director.create(request_json)
             loging.debug(request_json, "SUCCESS: Created director with parametrs")
         except IntegrityError as exc:
-            loging.exept(f"ERROR: bad arguments in request")
+            loging.exept("ERROR: bad arguments in request")
             Director.rollback()
-            return {"Bad args ERROR. Explanation": str(exc)}, 400
+            return {"status": f"error: {str(exc)}"}, 400
 
         return director, 201
 
@@ -94,6 +99,10 @@ class DirectorsList(Resource):
 
 
 class DirectorsItem(Resource):
+    """
+    class DirectorsItem
+    """
+
     @login_required
     def delete(self, id):
         """
@@ -114,18 +123,18 @@ class DirectorsItem(Resource):
         """
         director = db.session.query(Director).get(id)
         if not director:
-            return {"ERROR. NOT FOUND film_id": id}, 404
+            return {"status": "fail"}, 404
         if current_user.is_admin == True:
             try:
                 Director.delete(id)
                 loging.info(id, "SUCCESS. Deleted director with id")
             except (IntegrityError, TypeError) as exc:
-                loging.exept(f"ERROR: bad arguments in request")
+                loging.exept("ERROR: bad arguments in request")
                 Director.rollback()
-                return {"Bad args ERROR. Explanation": str(exc)}, 400
-            return {"Success": f"Director with id {id} is deleted."}, 200
+                return {"status": f"error: {str(exc)}"}, 400
+            return {"status": "success"}, 200
         loging.debug(
             "only admin",
             "FAIL. Not enough permissions to access",
         )
-        return {"permissions ERROR": "Not enough permissions to access"}, 403
+        return {"status": "permissions error"}, 403

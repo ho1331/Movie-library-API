@@ -1,7 +1,7 @@
 from random import randint
 
 import pytest
-from src.tests.data_to_test import (
+from src.tests.mark_parametrize import (
     admin,
     authorizate_user,
     current_user,
@@ -33,7 +33,7 @@ def test_director_post(test_client):
 def test_director_del(test_client):
     # if not login
     test_client.get("/api/logout/")
-    response = test_client.delete(f"/api/directors/{randint(1,30)}")
+    response = test_client.delete(f"/api/directors/{randint(1,100)}")
     assert response.status_code == 401
 
     # if  login user
@@ -43,7 +43,7 @@ def test_director_del(test_client):
             login=current_user.get("email"), password=authorizate_user["password"]
         ),
     )
-    response = test_client.delete(f"/api/films-views/{randint(1,30)}")
+    response = test_client.delete(f"/api/directors/{randint(1,100)}")
     assert response.status_code == 403
 
     # admin
@@ -51,5 +51,5 @@ def test_director_del(test_client):
         "/api/login/",
         json=dict(login=admin.get("email"), password=data_admin["password"]),
     )
-    response = test_client.delete(f"/api/films-views/{randint(1,30)}")
+    response = test_client.delete(f"/api/directors/{randint(1,100)}")
     assert response.status_code == 200

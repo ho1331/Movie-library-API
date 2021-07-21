@@ -20,7 +20,6 @@ class Genre(db.Model, BaseModel):
         """
         create genre
         """
-        result: dict = {}
         genres = Genre(genre=genre)
         result = {"genre": genres.genre}
         genres.save()

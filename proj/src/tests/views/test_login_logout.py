@@ -1,5 +1,9 @@
 import pytest
-from src.tests.data_to_test import authorizate_user, current_user, unauthorizate_user
+from src.tests.mark_parametrize import (
+    authorizate_user,
+    current_user,
+    unauthorizate_user,
+)
 
 
 def test_login_logout(test_client):

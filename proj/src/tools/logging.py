@@ -7,7 +7,9 @@ class Loging:
 
     @staticmethod
     def debug(name, message):
-        """write logfile of winners"""
+        """
+        write debug logs
+        """
         logging.basicConfig(
             format="%(asctime)s:%(levelname)s:%(name)s - %(message)s",
             level=logging.DEBUG,
@@ -18,7 +20,9 @@ class Loging:
 
     @staticmethod
     def info(name, message):
-        """write logfile of winners"""
+        """
+        write info logs
+        """
         logging.basicConfig(
             format="%(asctime)s:%(levelname)s:%(name)s - %(message)s",
             level=logging.INFO,
@@ -29,7 +33,9 @@ class Loging:
 
     @staticmethod
     def exept(message):
-        """write logfile of winners"""
+        """
+        write exeption logs
+        """
         logging.basicConfig(
             format="%(asctime)s:%(levelname)s:%(name)s - %(message)s",
             level=logging.DEBUG,

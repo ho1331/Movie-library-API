@@ -2,7 +2,7 @@ from random import randint
 
 import pytest
 from src.models.films import Film
-from src.tests.data_to_test import (
+from src.tests.mark_parametrize import (
     authorizate_user,
     current_user,
     data_test_film_crete,
@@ -113,7 +113,7 @@ def test_film_list_patch(test_client, patch_data):
 
     # if not login
     test_client.get("/api/logout/")
-    response = test_client.patch(
+    response = test_client.put(
         f"/api/films-views/{int(count_films.id)}", json=patch_data
     )
     assert response.status_code == 401
@@ -126,15 +126,15 @@ def test_film_list_patch(test_client, patch_data):
         ),
     )
 
-    response = test_client.patch(
+    response = test_client.put(
         f"/api/films-views/{int(count_films.id)}", json=data_test_film_crete[0]
     )
     assert response.status_code == 400
 
-    response = test_client.patch(f"/api/films-views/{int(count_films.id)+1}")
+    response = test_client.put(f"/api/films-views/{int(count_films.id)+1}")
     assert response.status_code == 404
 
-    response = test_client.patch(
+    response = test_client.put(
         f"/api/films-views/{int(count_films.id)}", json=patch_data
     )
     assert response.status_code == 201
@@ -144,7 +144,7 @@ def test_film_list_del(test_client):
     count_films = Film.query.order_by(Film.id.desc()).first()
     # if not login
     test_client.get("/api/logout/")
-    response = test_client.delete(f"/api/films-views/{randint(1,20)}")
+    response = test_client.delete(f"/api/films-views/{randint(1,100)}")
     assert response.status_code == 401
 
     # if  login
@@ -155,7 +155,7 @@ def test_film_list_del(test_client):
         ),
     )
     # not user_id==film_id
-    response = test_client.delete(f"/api/films-views/{randint(1,20)}")
+    response = test_client.delete(f"/api/films-views/{randint(1,100)}")
     assert response.status_code == 403
 
     response = test_client.delete(f"/api/films-views/{int(count_films.id)}")

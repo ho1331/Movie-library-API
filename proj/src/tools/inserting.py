@@ -1,3 +1,4 @@
+"""module for seed default data into database"""
 from random import randint, uniform
 
 from faker import Factory
@@ -12,6 +13,9 @@ from src.models.users import User
 
 @app.cli.command("seed_db")
 def after_create():
+    """
+    function to inser fake data into database tables
+    """
     faker = Factory.create()
     count = 0
     while count <= 50:

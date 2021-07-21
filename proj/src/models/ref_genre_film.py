@@ -22,7 +22,6 @@ class Ref(db.Model, BaseModel):
         """
         create ref
         """
-        result: dict = {}
         ref = Ref(**data)
         ref.save()
         result = {

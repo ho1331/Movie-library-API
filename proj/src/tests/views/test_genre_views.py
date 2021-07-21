@@ -1,7 +1,7 @@
 from random import randint
 
 import pytest
-from src.tests.data_to_test import authorizate_user, current_user
+from src.tests.mark_parametrize import authorizate_user, current_user
 
 
 def test_genre_list__get(test_client):
