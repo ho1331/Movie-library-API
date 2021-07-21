@@ -158,6 +158,7 @@ class FilmsListViews(Resource):
           - in: query
             name: genres
             required: false
+            description: anime
             type: array
             items:
                 type: string
@@ -165,6 +166,7 @@ class FilmsListViews(Resource):
             minItems: 1
           - in: query
             name: period
+            description: from 1992-10-05 to 2009-09-14
             required: false
             type: array
             items:
@@ -175,18 +177,24 @@ class FilmsListViews(Resource):
             maxItems: 2
           - in: query
             name: part_title
-            description: partial search title of film
+            description: ..of the rings
             required: false
           - in: query
+            name: rating
+            description: 2.96
+            required: false
+            type: number
+            format: float
+          - in: query
             name: sort-by-rating
-            description: sorting film by rating (asc/desc)
+            description: (asc/desc)
             schema:
                 type: string
                 enum: [asc, desc]
             required: false
           - in: query
             name: sort-by-release
-            description: sorting film by date of release (asc/desc)
+            description: (asc/desc)
             schema:
                 type: string
                 enum: [asc, desc]
@@ -194,12 +202,12 @@ class FilmsListViews(Resource):
           - in: query
             name: page
             type: integer
-            description: asc or desc
+            description: 1
             required: false
           - in: query
             name: per_page
             type: integer
-            description: asc or desc
+            description: default=10
             required: false
 
         responses:
@@ -336,6 +344,7 @@ class FilmsItem(Resource):
                     minItems: 1
                 director:
                     type: array
+                    description: name,sername
                     items:
                       type: string
                     minItems: 2
